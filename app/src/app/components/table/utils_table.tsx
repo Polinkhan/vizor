@@ -1,0 +1,52 @@
+// ----------------------------------------------------------------------
+
+import { TableColumnType } from "../../common/types/types.table";
+
+export function emptyRows(page: number, rowsPerPage: number, arrayLength: number) {
+  return page ? Math.max(0, (1 + page) * rowsPerPage - arrayLength) : 0;
+}
+
+function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
+  if (a[orderBy] === null) {
+    return 1;
+  }
+  if (b[orderBy] === null) {
+    return -1;
+  }
+  if (b[orderBy] < a[orderBy]) {
+    return -1;
+  }
+  if (b[orderBy] > a[orderBy]) {
+    return 1;
+  }
+  return 0;
+}
+
+export function getComparator<Key extends keyof any>(
+  order: "asc" | "desc",
+  orderBy: Key
+): (a: { [key in Key]: number | string }, b: { [key in Key]: number | string }) => number {
+  return order === "desc"
+    ? (a, b) => descendingComparator(a, b, orderBy)
+    : (a, b) => -descendingComparator(a, b, orderBy);
+}
+
+export const searchFormetter = ({
+  data,
+  search,
+  columns,
+}: {
+  data: any;
+  search: string;
+  columns: TableColumnType[];
+}) => {
+  if (search.length > 1) {
+    return data.filter((item: any) => {
+      const newItem = columns
+        .map(({ key, isActionComponent }) => (!isActionComponent ? item[key as any] : ""))
+        .join(" ")
+        .toLowerCase();
+      return newItem.includes(search.toLocaleLowerCase());
+    });
+  } else return data;
+};

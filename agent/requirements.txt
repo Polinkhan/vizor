@@ -1,0 +1,9 @@
+Flask
+Flask-SocketIO
+psutil
+gevent
+py-cpuinfo
+gputil
+pyyaml
+Flask-WTF
+python-dotenv

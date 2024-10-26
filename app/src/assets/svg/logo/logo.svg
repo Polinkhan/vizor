@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<svg viewBox="0 0 68.6 62.419" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <radialGradient id="radial-gradient" cx="23.9559" cy="27.8969" r="26.0045" gradientUnits="userSpaceOnUse" gradientTransform="matrix(1, 0, 0, 1, 98.194138, 29.90971)">
+      <stop offset="0" stop-color="#00a7ea"/>
+      <stop offset="0.1345" stop-color="#029fe5"/>
+      <stop offset="0.3375" stop-color="#068bd5"/>
+      <stop offset="0.5837" stop-color="#0d69bd"/>
+      <stop offset="0.8613" stop-color="#173a9b"/>
+      <stop offset="1" stop-color="#1d2088"/>
+    </radialGradient>
+    <linearGradient id="レッドグラデ" x1="23.6671" y1="19.9842" x2="4.5855" y2="56.2567" gradientUnits="userSpaceOnUse" gradientTransform="matrix(1, 0, 0, 1, 98.194138, 29.90971)">
+      <stop offset="0.0112" stop-color="#d1000e"/>
+      <stop offset="0.4775" stop-color="#e60012"/>
+      <stop offset="1" stop-color="#eb6135"/>
+    </linearGradient>
+  </defs>
+  <title>アセット 2</title>
+  <g id="レイヤー_2" data-name="レイヤー 2" transform="matrix(1, 0, 0, 1, -84.150002, -25.783823)">
+    <g id="レイヤー_1-2" data-name="レイヤー 1">
+      <path d="M 135.087 58.76 C 131.4 44.821 114.007 40.101 103.779 50.263 C 99.012 55 97.148 61.929 98.895 68.419 C 101.563 78.415 111.921 84.684 121.821 81.682 C 131.347 78.794 137.755 68.751 135.087 58.76 Z" fill="url(#radial-gradient)"/>
+      <path d="M 131.288 45.92 C 129.204 47.605 109.999 57.793 105.311 70.674 C 102.079 79.557 111.806 83.221 120.284 82.077 C 120.284 82.077 93.184 87.545 99.017 65.55 C 104.413 45.197 137.298 29.91 137.298 29.91 L 131.288 45.92 Z" fill="url(#レッドグラデ)"/>
+    </g>
+  </g>
+</svg>
