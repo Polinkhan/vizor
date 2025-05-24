@@ -1,9 +1,18 @@
-import { Box, IconButton, Stack, SxProps, Table, TableBody, TableContainer, Tooltip } from "@mui/material";
+import {
+  Box,
+  IconButton,
+  Stack,
+  SxProps,
+  Table,
+  TableBody,
+  TableContainer,
+  Tooltip,
+} from "@mui/material";
 import TableHeadCustom from "./table-head-custom";
 import { ReactNode } from "react";
 import TablePaginationCustom from "./table-pagination-custom";
 import TableSelectedAction from "./table-selected-action";
-import { getIcon } from "../icon/Icons";
+import { SVG } from "../images/Image";
 
 // ------------------------------------------------------------------
 // Interface for the StyledTableProps.
@@ -21,6 +30,7 @@ interface StyledTableProps {
   sx: SxProps;
   viewOnly?: boolean;
   children: ReactNode;
+  paginated?: boolean;
 }
 // ------------------------------------------------------------------
 // PaginatedStylesTable component for rendering a paginated table.
@@ -31,11 +41,24 @@ interface StyledTableProps {
 // - header: Header configuration.
 // - sx: Styling properties.
 // ------------------------------------------------------------------
-const PaginatedStylesTable = ({ data, children, table, header, sx }: StyledTableProps) => {
+const PaginatedStylesTable = ({
+  data,
+  children,
+  table,
+  header,
+  sx,
+  paginated,
+}: StyledTableProps) => {
   return (
     <Box height={1} overflow={"hidden"}>
       <Stack sx={{ height: 1, justifyContent: "space-between" }}>
-        <TableContainer sx={{ height: 1, borderBottomLeftRadius: 0, borderBottomRightRadius: 0 }}>
+        <TableContainer
+          sx={{
+            height: 1,
+            borderBottomLeftRadius: 0,
+            borderBottomRightRadius: 0,
+          }}
+        >
           <TableSelectedAction
             numSelected={table.selected.length}
             rowCount={data.length}
@@ -48,7 +71,7 @@ const PaginatedStylesTable = ({ data, children, table, header, sx }: StyledTable
             action={
               <Tooltip title="Delete">
                 <IconButton color="primary" onClick={() => {}}>
-                  {getIcon("delete")}
+                  <SVG.stop />
                 </IconButton>
               </Tooltip>
             }
@@ -69,11 +92,15 @@ const PaginatedStylesTable = ({ data, children, table, header, sx }: StyledTable
                 )
               }
             />
-            <TableBody sx={{ height: 1, overflow: "auto" }}>{children}</TableBody>
+            <TableBody sx={{ height: 1, overflow: "auto" }}>
+              {children}
+            </TableBody>
           </Table>
         </TableContainer>
 
-        <TablePaginationCustom table={table} count={table.rowCount} />
+        {paginated && (
+          <TablePaginationCustom table={table} count={table.rowCount} />
+        )}
       </Stack>
     </Box>
   );

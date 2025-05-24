@@ -103,7 +103,15 @@ const useTableFilter = ({ table, filterList }: UseTableFilterProps) => {
   }, [filterList]);
 
   // Return the state and handlers for use in the component
-  return { filters, filterData, handleFilters, handleSearchFilters, handleFilterStatus, handleResetFilters };
+  return {
+    filters,
+    searchTerm,
+    filterData,
+    handleFilters,
+    handleSearchFilters,
+    handleFilterStatus,
+    handleResetFilters,
+  };
 };
 
 export default useTableFilter;

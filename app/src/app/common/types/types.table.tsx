@@ -34,8 +34,9 @@ export type TableColumnType = TableColumnType1 | TableColumnType2;
 export interface TableBodyProps {
   data: any;
   table: any;
-  resource?: { columns: TableColumnType[] };
+  resource: TableRecourseType;
   header: HeaderTypes[];
+  paginated?: boolean;
 }
 
 export type TableRecourseType = {
@@ -65,9 +66,11 @@ export interface TableProps {
   resource: TableRecourseType;
   config?: UseTableProps;
   table?: any;
+  paginated?: boolean;
   disableFilter?: boolean;
 }
 
-export interface TableComponentProps<T> extends Omit<TableRecourseType, "columns"> {
+export interface TableComponentProps<T>
+  extends Omit<TableRecourseType, "columns"> {
   data: T;
 }

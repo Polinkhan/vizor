@@ -1,8 +1,9 @@
-import { Drawer, Stack } from "@mui/material";
+import { Drawer, Stack, Typography } from "@mui/material";
 import { useLocation } from "react-router-dom";
 import { SVG } from "../../../components/images/Image";
-import Logo from "../../../components/logo/Logo";
 import MenuButton from "../../../components/Buttons/MenuButton";
+import app from "../../../../assets/svg/icons/app.svg";
+import SvgIcon from "../../../components/icon/SvgIcon";
 
 // -----------------------------------------------------------------------------
 // Component: SideBar
@@ -14,14 +15,22 @@ const SideBar = ({ onClose }: { onClose?: () => void }) => {
   const location = useLocation();
 
   return (
-    <Stack p={2} flex={1} gap={2} bgcolor={"grey.50"}>
-      <Logo
-        sx={{
-          height: 80,
-          alignSelf: "start",
-          WebkitFilter: "drop-shadow( 1.95px 1.95px 2.6px rgba(0, 0, 0, 0.25))",
-        }}
-      />
+    <Stack p={2} gap={2} flex={1}>
+      <Stack gap={2} direction={"row"} alignItems={"center"}>
+        <SvgIcon
+          src={app}
+          height={60}
+          sx={{ bgcolor: (theme) => theme.palette.primary.main }}
+        />
+        <Stack>
+          <Typography color={"primary.main"} fontWeight={600}>
+            Vizor
+          </Typography>
+          <Typography color={"grey.600"} variant="caption" fontWeight={500}>
+            Monitoring in real time
+          </Typography>
+        </Stack>
+      </Stack>
       <MenuList currentPath={location.pathname} onClose={onClose} />
     </Stack>
   );
@@ -34,12 +43,49 @@ const SideBar = ({ onClose }: { onClose?: () => void }) => {
 // - currentPath: The current URL path.
 // - onClose: A function to close the sidebar.
 // -----------------------------------------------------------------------------
-const MenuList = ({ currentPath, onClose }: { currentPath: string; onClose: any }) => {
+const MenuList = ({
+  currentPath,
+  onClose,
+}: {
+  currentPath: string;
+  onClose: any;
+}) => {
   const modules = [
-    { id: 1, name: "Dashboard", url: "dashboard", active_url: ["dashboard"], icon: "dashboard" },
-    { id: 2, name: "Services", url: "services", active_url: ["services"], icon: "dashboard" },
-    { id: 2, name: "Logger", url: "logger", active_url: ["logger"], icon: "dashboard" },
-    { id: 3, name: "System Information", url: "system_info", active_url: ["system_info"], icon: "dashboard" },
+    {
+      id: 1,
+      name: "Dashboard",
+      url: "dashboard",
+      active_url: ["dashboard"],
+      icon: "dashboard",
+    },
+    {
+      id: 2,
+      name: "Services",
+      url: "services",
+      active_url: ["services"],
+      icon: "dashboard",
+    },
+    {
+      id: 3,
+      name: "Logger",
+      url: "logger",
+      active_url: ["logger"],
+      icon: "dashboard",
+    },
+    {
+      id: 3,
+      name: "Terminal",
+      url: "terminal",
+      active_url: ["terminal"],
+      icon: "dashboard",
+    },
+    {
+      id: 4,
+      name: "System Information",
+      url: "system_info",
+      active_url: ["system_info"],
+      icon: "dashboard",
+    },
   ];
   const paths = currentPath.split("/");
 
@@ -78,7 +124,12 @@ interface MobileSideBarProps {
 
 const MobileSideBar = ({ open, onClose }: MobileSideBarProps) => {
   return (
-    <Drawer PaperProps={{ sx: { p: 2, width: 300 } }} anchor={"left"} open={open} onClose={onClose}>
+    <Drawer
+      PaperProps={{ sx: { p: 2, width: 300 } }}
+      anchor={"left"}
+      open={open}
+      onClose={onClose}
+    >
       <SideBar onClose={onClose} />
     </Drawer>
   );

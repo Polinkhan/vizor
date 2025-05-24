@@ -2,6 +2,7 @@ import SvgIcon from "../icon/SvgIcon";
 import { Box, BoxProps } from "@mui/material";
 
 // sidebar icon
+import app from "../../../assets/svg/icons/app.svg";
 import job from "../../../assets/svg/sidebar/job.svg";
 import user from "../../../assets/svg/sidebar/user.svg";
 import profile from "../../../assets/svg/sidebar/profile.svg";
@@ -15,6 +16,7 @@ import store_management from "../../../assets/svg/sidebar/store_management.svg";
 import play from "../../../assets/svg/icons/play.svg";
 import stop from "../../../assets/svg/icons/stop.svg";
 import restart from "../../../assets/svg/icons/restart.svg";
+import download from "../../../assets/svg/icons/download.svg";
 import notification from "../../../assets/svg/icons/notification.svg";
 
 // ------------------------------------------
@@ -46,12 +48,14 @@ const getSvgImage = (src: string, props: svgProps) => {
 };
 
 export const SVG = {
+  app: (props: svgProps) => getSvgImage(app, props),
   job: (props: svgProps) => getSvgImage(job, props),
   user: (props: svgProps) => getSvgImage(user, props),
   play: (props: svgProps) => getSvgImage(play, props),
   stop: (props: svgProps) => getSvgImage(stop, props),
   restart: (props: svgProps) => getSvgImage(restart, props),
   profile: (props: svgProps) => getSvgImage(profile, props),
+  download: (props: svgProps) => getSvgImage(download, props),
   analytics: (props: svgProps) => getSvgImage(analytics, props),
   dashboard: (props: svgProps) => getSvgImage(dashboard, props),
   notification: (props: svgProps) => getSvgImage(notification, props),

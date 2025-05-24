@@ -1,5 +1,5 @@
 import { HeaderTypes, TableColumnType } from "../../common/types/types.table";
-import { ActionField, ActiveState, CpuInfo, LoadState, MemInfo, Status } from "./components/Components";
+import { ActionField, ActiveState, CpuInfo,  MemInfo, Status } from "./components/Components";
 
 export const ServicesTableHeader: HeaderTypes[] = [
   { label: "Service name", width: 250 },
@@ -8,7 +8,6 @@ export const ServicesTableHeader: HeaderTypes[] = [
   { label: "CPU Usage", align: "center", width: 120 },
   { label: "Memory Usage", align: "center", width: 150 },
   { label: "Active State", align: "center", width: 150 },
-  { label: "Load State", align: "center", width: 150 },
   { label: "Sub State", align: "center", width: 150 },
   { label: "Action", align: "center", width: 150 },
 ];
@@ -20,7 +19,6 @@ export const ServicesTableColumns: TableColumnType[] = [
   { Component: CpuInfo, align: "center" },
   { Component: MemInfo, align: "center" },
   { Component: ActiveState, align: "center" },
-  { Component: LoadState, align: "center" },
   { Component: Status, align: "center" },
   { Component: ActionField, align: "center" },
 ];

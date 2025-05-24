@@ -32,7 +32,6 @@ const ServicesView = () => {
   const filterList: Omit<TablefilterListType, "data">[] = [
     { label: "Active State", key: "active", defaultFilters: ["active", "inactive"] },
     { label: "Sub State", key: "sub", defaultFilters: ["running", "dead"] },
-    { label: "Load State", key: "load", defaultFilters: [] },
   ];
 
   return (

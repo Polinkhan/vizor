@@ -5,23 +5,47 @@
 import { Stack, SxProps, TableCell, TableRow, Typography } from "@mui/material";
 import useTable from "../../hooks/custom/use-table";
 import PaginatedStylesTable from "./paginated-styled-table";
-import { TableProps, TablefilterListType, alignType } from "../../common/types/types.table";
+import {
+  TableProps,
+  TablefilterListType,
+  alignType,
+} from "../../common/types/types.table";
 import { useEffect } from "react";
 import DefaultTableBody from "./default-table-body";
 import TableToolbar from "./table-toolbar";
 import useTableFilter from "../../hooks/custom/use-table-filter";
 
 export const CustomTable = (props: TableProps) => {
-  const { error, data, header, sx, config, iconButtons, disableFilter, filterList = [], ...rest } = props;
+  const {
+    error,
+    data,
+    header,
+    sx,
+    config,
+    iconButtons,
+    disableFilter,
+    resource,
+    paginated = true,
+    filterList = [],
+    ...rest
+  } = props;
   const table = useTable(config);
 
   const filterListwithData: TablefilterListType[] = [];
   filterList.map((props, index) => {
     filterListwithData[index] = { ...props, data: [] };
-    filterListwithData[index].data = [...new Set(data.map((row: any) => row[props.key]))].sort();
+    filterListwithData[index].data = [
+      ...new Set(data.map((row: any) => row[props.key])),
+    ].sort();
   });
 
-  const { filters, handleFilters, handleSearchFilters, filterData } = useTableFilter({
+  const {
+    filters,
+    searchTerm,
+    handleFilters,
+    handleSearchFilters,
+    filterData,
+  } = useTableFilter({
     table,
     filterList: filterListwithData,
   });
@@ -37,8 +61,21 @@ export const CustomTable = (props: TableProps) => {
         onSearch={handleSearchFilters}
         filterList={filterListwithData}
       />
-      <PaginatedStylesTable data={dataFiltered || []} table={table} header={header} sx={{ ...sx }}>
-        <RenderBody data={dataFiltered} table={table} header={header} {...rest} />
+      <PaginatedStylesTable
+        data={dataFiltered || []}
+        table={table}
+        header={header}
+        paginated={paginated}
+        sx={{ ...sx }}
+      >
+        <RenderBody
+          data={dataFiltered}
+          table={table}
+          header={header}
+          paginated={paginated}
+          resource={{ ...resource, search: searchTerm }}
+          {...rest}
+        />
       </PaginatedStylesTable>
     </Stack>
   );
@@ -78,7 +115,11 @@ export const NoDataFound = ({ size = "md" }: { size?: "sm" | "md" }) => {
     <TableRow sx={{ height: size === "md" ? "45vh" : 1 }}>
       <TableCell colSpan={99} {...valueProp}>
         {/* <SVG.FileNotFound default size={size === "md" ? 200 : 120} /> */}
-        <Typography variant={"h6"} color={"grey.500"} pb={size === "sm" ? 2 : 0}>
+        <Typography
+          variant={"h6"}
+          color={"grey.500"}
+          pb={size === "sm" ? 2 : 0}
+        >
           No data available in the table
         </Typography>
       </TableCell>

@@ -1,10 +1,23 @@
-import { Checkbox, SxProps, TableCell, TableRow, Typography } from "@mui/material";
-import { alignType, TableBodyProps, TableColumnType } from "../../common/types/types.table";
+import {
+  Checkbox,
+  SxProps,
+  TableCell,
+  TableRow,
+  Typography,
+} from "@mui/material";
+import {
+  alignType,
+  TableBodyProps,
+  TableColumnType,
+  TableRecourseType,
+} from "../../common/types/types.table";
 
-const TableBody = ({ data, table, resource }: TableBodyProps) => {
+const TableBody = ({ data, table, resource, paginated }: TableBodyProps) => {
   const { page, rowsPerPage } = table;
 
-  data = data.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
+  if (paginated) {
+    data = data.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
+  }
 
   const prevIndex = page * rowsPerPage;
   return (
@@ -24,14 +37,25 @@ const TableBody = ({ data, table, resource }: TableBodyProps) => {
 
 interface TableRowComponentProps {
   val: any;
-  resource: any;
   selected: boolean;
   onSelectRow: VoidFunction;
+  resource: TableRecourseType;
 }
 
-const TableRowComponent = ({ val, resource, selected, onSelectRow }: TableRowComponentProps) => {
+const TableRowComponent = ({
+  val,
+  resource,
+  selected,
+  onSelectRow,
+}: TableRowComponentProps) => {
   const valueProp: { align?: alignType; sx?: SxProps } = { align: "center" };
-  const { columns } = resource;
+  const { columns, search } = resource;
+
+  const highlightSearchTerm = (text: string, term: string | undefined) => {
+    if (!term) return text;
+    const regex = new RegExp(`(${term})`, "gi");
+    return text.replace(regex, `<mark>$1</mark>`);
+  };
 
   return (
     <TableRow>
@@ -49,10 +73,24 @@ const TableRowComponent = ({ val, resource, selected, onSelectRow }: TableRowCom
                   {list}
                 </Typography>
               ));
-            } else return data;
+            } else {
+              return (
+                <Typography
+                  fontSize={13}
+                  dangerouslySetInnerHTML={{
+                    __html: highlightSearchTerm(data, search),
+                  }}
+                />
+              );
+            }
           };
         return (
-          <TableCell {...valueProp} align={align ?? "left"} key={i} sx={{ p: 1.5 }}>
+          <TableCell
+            {...valueProp}
+            align={align ?? "left"}
+            key={i}
+            sx={{ p: 1.5 }}
+          >
             {Component ? (
               <Component {...resource} data={key ? val[key] : val} />
             ) : (

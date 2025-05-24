@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useCallback, useState } from "react";
+import debounce from "lodash.debounce";
 import { TextField, Typography } from "@mui/material";
 import { FetchApiType } from "../../common/types/types.api";
 import ComponentLoader from "../../components/lodaer/ComponentLoader";
@@ -14,12 +15,16 @@ const LoggerView = () => {
   // States
   // ------------------------------------------
 
-  const lines = localStorage.getItem("log_lines") || 5;
-  const file_path = localStorage.getItem("log_file_path") || "";
-  const filter_keyword = localStorage.getItem("log_filter_keyword") || "";
-  const [body, setBody] = useState({ file_path, filter_keyword, lines });
-
-  console.log(body);
+  const log_lines = localStorage.getItem("log_lines") || 10;
+  const log_format = localStorage.getItem("log_format") || "none";
+  const log_file_path = localStorage.getItem("log_file_path") || "";
+  const log_filter_keyword = localStorage.getItem("log_filter_keyword") || "";
+  const [body, setBody] = useState({
+    log_file_path,
+    log_filter_keyword,
+    log_format,
+    log_lines,
+  });
 
   // ------------------------------------------
   // Hooks
@@ -31,12 +36,16 @@ const LoggerView = () => {
   // Fetching data
   // ------------------------------------------
   const api: FetchApiType = { method: "POST", url: "api/get_log", body };
-  const { data } = useIntervalFetch({ api, dependency: [render], intervalTime: refreshAt });
+  const { data } = useIntervalFetch({
+    api,
+    dependency: [render],
+    intervalTime: refreshAt,
+  });
 
   // ------------------------------------------
-  // variables
+  // Variables
   // ------------------------------------------
-  const lists = [
+  const line_lists = [
     { label: "5 Line", value: 5 },
     { label: "10 Line", value: 10 },
     { label: "25 Line", value: 25 },
@@ -44,59 +53,80 @@ const LoggerView = () => {
     { label: "100 Line", value: 100 },
   ];
 
-  const handleChange = (key: keyof typeof body, e: any) => {
-    if (key === "lines") {
-      localStorage.setItem("log_lines", e.target.value);
-      setBody((prev) => ({ ...prev, lines: e.target.value }));
+  const format_lists = [
+    { label: "None", value: "none" },
+    { label: "Syslog", value: "syslog" },
+    { label: "Custom", value: "custom" },
+  ];
+
+  // ------------------------------------------
+  // Functions
+  // ------------------------------------------
+  const debouncedReRender = useCallback(debounce(reRender, 500), []);
+
+  const handleChange = (key: keyof typeof body, value: any) => {
+    // Set Value
+    localStorage.setItem(key, value);
+    setBody((prev) => ({ ...prev, [key]: value }));
+
+    // Re-render
+    if (key === "log_lines" || key === "log_format") {
+      reRender();
+    } else {
+      debouncedReRender();
     }
-    if (key === "filter_keyword") {
-      localStorage.setItem("log_filter_keyword", e.target.value);
-      setBody((prev) => ({ ...prev, filter_keyword: e.target.value }));
-    }
-    if (key === "file_path") {
-      localStorage.setItem("log_file_path", e.target.value);
-      setBody((prev) => ({ ...prev, file_path: e.target.value }));
-    }
-    reRender();
   };
 
   const iconButtons = [
     <TextField
-      value={body.file_path}
-      sx={{ flex: 2 }}
+      value={body.log_file_path}
+      sx={{ flex: 1.5 }}
       label="Log File Path"
-      onChange={(e) => handleChange("file_path", e)}
+      onChange={(e) => handleChange("log_file_path", e.target.value)}
     />,
     <TextField
-      value={body.filter_keyword}
+      value={body.log_filter_keyword}
       sx={{ flex: 1 }}
       label="Keywords"
-      onChange={(e) => handleChange("filter_keyword", e)}
+      onChange={(e) => handleChange("log_filter_keyword", e.target.value)}
     />,
     <CustomSelect
-      value={body.lines}
-      lists={lists}
+      value={body.log_format}
+      lists={format_lists}
+      label={"Log format"}
+      fullWidth={false}
+      sx={{ minWidth: 200 }}
+      onChange={(e) => handleChange("log_format", e.target.value)}
+    />,
+    <CustomSelect
+      value={body.log_lines}
+      lists={line_lists}
       label={"Last line"}
       fullWidth={false}
-      sx={{ minWidth: 250 }}
-      onChange={(e) => handleChange("lines", e)}
+      sx={{ minWidth: 200 }}
+      onChange={(e) => handleChange("log_lines", e.target.value)}
     />,
-    <RefreshSelect {...RefreshProps} sx={{ minWidth: 250 }} />,
+    <RefreshSelect {...RefreshProps} sx={{ minWidth: 200 }} />,
   ];
 
   return (
     <ComponentLoader data={data}>
       <CustomTable
         disableFilter
+        paginated={false}
         data={data}
         header={[{ label: "Log" }]}
         iconButtons={iconButtons}
-        config={{ defaultRowsPerPage: 10 }}
         resource={{
           columns: [
             {
               key: "log",
-              Component: ({ data: log }) => <Typography fontSize={13} dangerouslySetInnerHTML={{ __html: log }} />,
+              Component: ({ data: log }) => (
+                <Typography
+                  fontSize={13}
+                  dangerouslySetInnerHTML={{ __html: log }}
+                />
+              ),
             },
           ],
           reRender,

@@ -38,7 +38,7 @@ const Title = ({ name, link }: TitleProps) => {
   return (
     <Helmet>
       {/* Set the HTML title with the specified name and "Aerosphare Suite" as a suffix. */}
-      <title>{name} | Nippon Steel Engineering</title>
+      <title>{name} | Vizor</title>
 
       {/* Create an optional link tag with specified "rel" and "href" attributes. */}
       <link
