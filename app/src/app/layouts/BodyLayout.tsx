@@ -2,7 +2,6 @@ import { ReactNode } from "react";
 import Title from "../components/title/Title";
 import Suspense from "../components/handler/Suspense";
 import { Stack } from "@mui/material";
-import { icons } from "../common/types/types.ui";
 
 // ------------------------------------------------------------------
 // Interface for the BodyLayout component props.
@@ -13,7 +12,7 @@ import { icons } from "../common/types/types.ui";
 
 interface BodyLayoutProps {
   id: number;
-  icon: icons;
+  icon: any;
   name?: string;
   children: ReactNode;
 }

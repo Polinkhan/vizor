@@ -17,11 +17,7 @@ const SideBar = ({ onClose }: { onClose?: () => void }) => {
   return (
     <Stack p={2} gap={2} flex={1}>
       <Stack gap={2} direction={"row"} alignItems={"center"}>
-        <SvgIcon
-          src={app}
-          height={60}
-          sx={{ bgcolor: (theme) => theme.palette.primary.main }}
-        />
+        <SvgIcon src={app} height={60} sx={{ bgcolor: (theme) => theme.palette.primary.main }} />
         <Stack>
           <Typography color={"primary.main"} fontWeight={600}>
             Vizor
@@ -43,44 +39,39 @@ const SideBar = ({ onClose }: { onClose?: () => void }) => {
 // - currentPath: The current URL path.
 // - onClose: A function to close the sidebar.
 // -----------------------------------------------------------------------------
-const MenuList = ({
-  currentPath,
-  onClose,
-}: {
-  currentPath: string;
-  onClose: any;
-}) => {
+const MenuList = ({ currentPath, onClose }: { currentPath: string; onClose: any }) => {
   const modules = [
     {
-      id: 1,
       name: "Dashboard",
       url: "dashboard",
       active_url: ["dashboard"],
       icon: "dashboard",
     },
     {
-      id: 2,
       name: "Services",
       url: "services",
       active_url: ["services"],
       icon: "dashboard",
     },
     {
-      id: 3,
+      name: "Files",
+      url: "files",
+      active_url: ["files"],
+      icon: "dashboard",
+    },
+    {
       name: "Logger",
       url: "logger",
       active_url: ["logger"],
       icon: "dashboard",
     },
     {
-      id: 3,
       name: "Terminal",
       url: "terminal",
       active_url: ["terminal"],
       icon: "dashboard",
     },
     {
-      id: 4,
       name: "System Information",
       url: "system_info",
       active_url: ["system_info"],
@@ -92,10 +83,10 @@ const MenuList = ({
   return (
     <Stack flex={1} gap={3}>
       <Stack gap={0.5}>
-        {modules.map(({ id, name, url, active_url, icon }) => {
+        {modules.map(({ name, url, active_url, icon }, index) => {
           return (
             <MenuButton
-              key={id}
+              key={index}
               active={paths.some((path) => active_url?.includes(path))}
               title={name}
               // @ts-ignore
@@ -124,12 +115,7 @@ interface MobileSideBarProps {
 
 const MobileSideBar = ({ open, onClose }: MobileSideBarProps) => {
   return (
-    <Drawer
-      PaperProps={{ sx: { p: 2, width: 300 } }}
-      anchor={"left"}
-      open={open}
-      onClose={onClose}
-    >
+    <Drawer PaperProps={{ sx: { p: 2, width: 300 } }} anchor={"left"} open={open} onClose={onClose}>
       <SideBar onClose={onClose} />
     </Drawer>
   );

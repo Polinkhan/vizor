@@ -1,5 +1,4 @@
 import { ReactNode } from "react";
-import Navbar from "../components/nav/Navbar";
 import useToggle from "../hooks/custom/use-toggle";
 import { Box, Divider, Stack } from "@mui/material";
 import { SideBar, MobileSideBar } from "../pages/Default/root/SideBar";
@@ -42,7 +41,7 @@ interface RootLayoutProps {
 
 const RootLayout = ({ children }: RootLayoutProps) => {
   const sm = useResponsive("down", "md");
-  const { open: navOpen, onClose: navOnClose, onOpen: navOnOpen } = useToggle();
+  const { open: navOpen, onClose: navOnClose } = useToggle();
 
   return (
     <Stack height={"100vh"}>

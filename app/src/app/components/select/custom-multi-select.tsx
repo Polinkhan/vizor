@@ -10,8 +10,6 @@ import {
   Select,
   SelectProps,
 } from "@mui/material";
-import { UserType } from "../../common/types/types.user";
-import { Profile } from "../../pages/Settings/UserManagement/Components";
 import { useEffect, useState } from "react";
 
 const ITEM_HEIGHT = 100;
@@ -31,12 +29,12 @@ export type CustomMultiSelectProps<type> = {
   loading?: boolean;
 } & SelectProps;
 
-const CustomMultiSelect = ({ label, value, options, loading, ...rest }: CustomMultiSelectProps<UserType>) => {
-  const [objectData, setObjectData] = useState<{ [key: string]: UserType }>({});
+const CustomMultiSelect = ({ label, value, options, loading, ...rest }: CustomMultiSelectProps<any>) => {
+  const [objectData, setObjectData] = useState<{ [key: string]: any }>({});
 
   useEffect(() => {
     if (options) {
-      const newData: { [key: string]: UserType } = {};
+      const newData: { [key: string]: any } = {};
       options.forEach(({ id, ...rest }) => {
         newData[id] = { id, ...rest };
       });
@@ -55,7 +53,7 @@ const CustomMultiSelect = ({ label, value, options, loading, ...rest }: CustomMu
         value={value}
         label={label}
         MenuProps={MenuProps}
-        renderValue={(selected) => {
+        renderValue={(selected: any) => {
           return (
             <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
               {selected.map((value: any) => {
@@ -77,7 +75,7 @@ const CustomMultiSelect = ({ label, value, options, loading, ...rest }: CustomMu
       >
         {options.map((option, index) => (
           <MenuItem key={index} value={option.id} sx={{ bgcolor: "#fff", px: 2, py: 1 }}>
-            <Profile data={option} />
+            {/* <Profile data={option} /> */}
           </MenuItem>
         ))}
       </Select>

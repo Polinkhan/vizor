@@ -1,16 +1,5 @@
-import {
-  Checkbox,
-  SxProps,
-  TableCell,
-  TableRow,
-  Typography,
-} from "@mui/material";
-import {
-  alignType,
-  TableBodyProps,
-  TableColumnType,
-  TableRecourseType,
-} from "../../common/types/types.table";
+import { Checkbox, SxProps, TableCell, TableRow, Typography } from "@mui/material";
+import { alignType, TableBodyProps, TableColumnType, TableRecourseType } from "../../common/types/types.table";
 
 const TableBody = ({ data, table, resource, paginated }: TableBodyProps) => {
   const { page, rowsPerPage } = table;
@@ -42,17 +31,12 @@ interface TableRowComponentProps {
   resource: TableRecourseType;
 }
 
-const TableRowComponent = ({
-  val,
-  resource,
-  selected,
-  onSelectRow,
-}: TableRowComponentProps) => {
+const TableRowComponent = ({ val, resource, selected, onSelectRow }: TableRowComponentProps) => {
   const valueProp: { align?: alignType; sx?: SxProps } = { align: "center" };
   const { columns, search } = resource;
 
   const highlightSearchTerm = (text: string, term: string | undefined) => {
-    if (!term) return text;
+    if (!term || !text) return text;
     const regex = new RegExp(`(${term})`, "gi");
     return text.replace(regex, `<mark>$1</mark>`);
   };
@@ -85,12 +69,7 @@ const TableRowComponent = ({
             }
           };
         return (
-          <TableCell
-            {...valueProp}
-            align={align ?? "left"}
-            key={i}
-            sx={{ p: 1.5 }}
-          >
+          <TableCell {...valueProp} align={align ?? "left"} key={i} sx={{ p: 1 }}>
             {Component ? (
               <Component {...resource} data={key ? val[key] : val} />
             ) : (

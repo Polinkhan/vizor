@@ -6,9 +6,9 @@ import ActionButton from "../../../components/Buttons/ActionButton";
 import RunningProgress from "../../../components/Loading/RunningProgress";
 import useToggle from "../../../hooks/custom/use-toggle";
 import { useSnackbar } from "notistack";
-import { getClient } from "../../../common/config/client";
-import { getErrorMessage } from "../../../common/helpers";
+import { convertBytes, getErrorMessage } from "../../../common/helpers";
 import CustomDialog, { DialogActionsType } from "../../../components/dialog/CustomDialog";
+import { useDataContext } from "../../../context/data-context";
 
 export const Status = ({ data }: TableComponentProps<ServicesType>) => {
   return (
@@ -26,22 +26,7 @@ export const CpuInfo = ({ data }: TableComponentProps<ServicesType>) => {
 };
 
 export const MemInfo = ({ data }: TableComponentProps<ServicesType>) => {
-  return (
-    <Stack gap={1} direction={"row"} alignItems={"center"}>
-      <Stack flex={1.5} justifyContent={"center"} alignItems={"end"}>
-        <Typography fontSize={13}>Allocated :</Typography>
-        <Typography fontSize={13}>Used :</Typography>
-      </Stack>
-      <Stack flex={1} justifyContent={"center"} alignItems={"start"}>
-        <Typography fontWeight={600} fontSize={12} color={"primary.main"}>
-          {typeof data.vms === "number" ? data.vms.toFixed(0) + " MB" : data.vms}
-        </Typography>
-        <Typography fontWeight={600} fontSize={12} color={"info.dark"}>
-          {typeof data.rss === "number" ? data.rss.toFixed(0) + " MB" : data.rss}
-        </Typography>
-      </Stack>
-    </Stack>
-  );
+  return data.memory_usage ? convertBytes(data.memory_usage) : "--";
 };
 
 export const ActiveState = ({ data }: TableComponentProps<ServicesType>) => {
@@ -59,21 +44,21 @@ export const ActionField = ({ data, reRender }: TableComponentProps<ServicesType
   const toggle = useToggle();
   const { resource } = toggle;
   const { enqueueSnackbar } = useSnackbar();
+  const { fetchSocketClient } = useDataContext();
 
   // ------------------------------------------
   // Functions
   // ------------------------------------------
   const handleClick = async () => {
-    const client = getClient();
+    const payload = { action: resource, service_name: data.service_name };
+
     try {
-      const body = { name: data.service_name, action: resource };
-      await client.post("api/update_service", body);
-      enqueueSnackbar(`${data.service_name} ${resource} successfully`, { variant: "success" });
-      toggle.onClose();
+      await fetchSocketClient("update_service", payload);
       reRender();
-    } catch (err) {
       toggle.onClose();
-      enqueueSnackbar(getErrorMessage(err), { variant: "error" });
+      enqueueSnackbar(`${data.service_name} ${resource} successfully`, { variant: "success" });
+    } catch (error) {
+      enqueueSnackbar(getErrorMessage(error), { variant: "error" });
     }
   };
 

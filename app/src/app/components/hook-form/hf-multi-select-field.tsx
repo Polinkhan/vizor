@@ -33,6 +33,7 @@ const HFMultiSelectField = ({ name, helperText, type, InputProps, label, horizon
           label={horizontalLabel ? null : label}
           {...field}
           error={!!error}
+          // @ts-ignore
           helperText={error ? error?.message : helperText}
           {...other}
         />

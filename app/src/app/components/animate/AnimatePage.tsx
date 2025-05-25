@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { useLocation, useParams } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 
 const animation = {
   initial: { opacity: 0, x: 50 },

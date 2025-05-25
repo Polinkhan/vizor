@@ -5,7 +5,7 @@ const useRefresh = () => {
   const { pathname } = useLocation();
   const param = pathname.split("/").join("");
 
-  const [refreshAt, setRefreshAt] = useState(localStorage.getItem(param) || 5000);
+  const [refreshAt, setRefreshAt] = useState(Number(localStorage.getItem(param) || 5000));
 
   const onChange = (e: any) => {
     const value = e.target.value;

@@ -10,7 +10,6 @@ const SvgIcon = forwardRef<HTMLSpanElement, SvgColorProps>(({ src, sx, reverse, 
   return (
     <Box
       component="span"
-      className="svg-color"
       ref={ref}
       sx={{
         width: other.height ?? { xs: 20, xl: 24 },

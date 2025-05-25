@@ -9,6 +9,7 @@ import Landing from "../../pages/landing";
 import SetupLayout from "../../pages/setup/SetupLayout";
 import Setup from "../../pages/setup";
 import Terminal from "../../pages/terminal";
+import Files from "../../pages/files";
 
 const RootPage = lazy(() => import("../../pages/Default/root"));
 
@@ -24,6 +25,7 @@ const RootRouter = () => {
       <Route path={"/app"} element={<RootPage />}>
         <Route path="dashboard" element={<Dashboard />} />
         <Route path="services" element={<Services />} />
+        <Route path="files" element={<Files />} />
         <Route path="logger" element={<Logger />} />
         <Route path="terminal" element={<Terminal />} />
       </Route>
@@ -35,10 +37,7 @@ const RootRouter = () => {
       {/*--------------------------------*/}
       {/*         Unknown Routes         */}
       {/*--------------------------------*/}
-      <Route
-        path="*"
-        element={<Navigate to={DEFAULT_ROUTE} replace={true} />}
-      />
+      <Route path="*" element={<Navigate to={DEFAULT_ROUTE} replace={true} />} />
     </Routes>
   );
 };

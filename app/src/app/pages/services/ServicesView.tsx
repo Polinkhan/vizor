@@ -2,11 +2,10 @@ import { TablefilterListType } from "../../common/types/types.table";
 import { CustomTable } from "../../components/table/custom-table";
 import { ServicesTableHeader, ServicesTableColumns } from "./utils";
 import useRerender from "../../hooks/custom/use-rerender";
-import { FetchApiType } from "../../common/types/types.api";
 import ComponentLoader from "../../components/lodaer/ComponentLoader";
-import useIntervalFetch from "../../hooks/fetch/use-interval-fetch";
 import useRefresh from "../../hooks/custom/use-refresh";
 import RefreshSelect from "../../components/refresh/RefreshSelect";
+import useSocket from "../../hooks/socket/use-socket";
 
 const ServicesView = () => {
   // ------------------------------------------
@@ -18,8 +17,7 @@ const ServicesView = () => {
   // ------------------------------------------
   // Fetching data
   // ------------------------------------------
-  const api: FetchApiType = { method: "GET", url: "api/service" };
-  const { data } = useIntervalFetch({ api, dependency: [render], intervalTime: refreshAt });
+  const { data } = useSocket({ type: "services", dependencies: [render], refreshAt });
 
   // ------------------------------------------
   // variables
@@ -30,7 +28,7 @@ const ServicesView = () => {
   // Table props
   // ------------------------------------------
   const filterList: Omit<TablefilterListType, "data">[] = [
-    { label: "Active State", key: "active", defaultFilters: ["active", "inactive"] },
+    { label: "Active State", key: "active", defaultFilters: ["active"] },
     { label: "Sub State", key: "sub", defaultFilters: ["running", "dead"] },
   ];
 
@@ -39,8 +37,8 @@ const ServicesView = () => {
       <CustomTable
         data={data}
         filterList={filterList}
-        header={ServicesTableHeader}
         iconButtons={iconButtons}
+        header={ServicesTableHeader}
         resource={{ columns: ServicesTableColumns, reRender }}
       />
     </ComponentLoader>

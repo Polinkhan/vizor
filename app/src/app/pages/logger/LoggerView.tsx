@@ -1,13 +1,11 @@
 import { useCallback, useState } from "react";
 import debounce from "lodash.debounce";
 import { TextField, Typography } from "@mui/material";
-import { FetchApiType } from "../../common/types/types.api";
 import ComponentLoader from "../../components/lodaer/ComponentLoader";
 import RefreshSelect from "../../components/refresh/RefreshSelect";
 import { CustomTable } from "../../components/table/custom-table";
 import useRefresh from "../../hooks/custom/use-refresh";
 import useRerender from "../../hooks/custom/use-rerender";
-import useIntervalFetch from "../../hooks/fetch/use-interval-fetch";
 import CustomSelect from "../../components/select/custom-select";
 
 const LoggerView = () => {
@@ -29,18 +27,8 @@ const LoggerView = () => {
   // ------------------------------------------
   // Hooks
   // ------------------------------------------
-  const { render, reRender } = useRerender();
-  const { refreshAt, RefreshProps } = useRefresh();
-
-  // ------------------------------------------
-  // Fetching data
-  // ------------------------------------------
-  const api: FetchApiType = { method: "POST", url: "api/get_log", body };
-  const { data } = useIntervalFetch({
-    api,
-    dependency: [render],
-    intervalTime: refreshAt,
-  });
+  const { reRender } = useRerender();
+  const { RefreshProps } = useRefresh();
 
   // ------------------------------------------
   // Variables
@@ -109,6 +97,8 @@ const LoggerView = () => {
     <RefreshSelect {...RefreshProps} sx={{ minWidth: 200 }} />,
   ];
 
+  const data: any[] = [];
+
   return (
     <ComponentLoader data={data}>
       <CustomTable
@@ -121,12 +111,7 @@ const LoggerView = () => {
           columns: [
             {
               key: "log",
-              Component: ({ data: log }) => (
-                <Typography
-                  fontSize={13}
-                  dangerouslySetInnerHTML={{ __html: log }}
-                />
-              ),
+              Component: ({ data: log }) => <Typography fontSize={13} dangerouslySetInnerHTML={{ __html: log }} />,
             },
           ],
           reRender,

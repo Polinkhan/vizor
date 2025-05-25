@@ -1,1 +1,9 @@
 vizor-agent
+/agent/__pycache__/
+/agent/*.py[cod]
+
+/agent/app/__pycache__/
+/agent/app/*.py[cod]
+
+
+

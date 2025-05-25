@@ -1,31 +1,44 @@
 import { useEffect, useState } from "react";
-import io, { Socket } from "socket.io-client";
-import { SOCKET_URL } from "../../common/config/config";
 import { StatusType } from "../../common/types/types.socket";
+import { useDataContext } from "../../context/data-context";
 
 interface UseSocketProps {
+  payload?: any;
   type: StatusType;
+  refreshAt?: number;
   dependencies?: any[];
+  disconnectOnsuccess?: boolean;
 }
 
-const useSocket = ({ type, dependencies = [] }: UseSocketProps) => {
-  let socket: Socket<any>;
+const useSocket = ({ type, disconnectOnsuccess, refreshAt, payload = {}, dependencies = [] }: UseSocketProps) => {
+  const { socket } = useDataContext();
   const [data, setData] = useState();
 
-  useEffect(() => {
-    socket = io(SOCKET_URL, { transports: ["websocket"] });
-    socket.emit(type);
+  const emitMessage = () => {
+    socket.emit(type, payload);
+  };
 
-    socket.on(type + "_status", (data: any) => {
+  useEffect(() => {
+    let interval_id: number;
+
+    emitMessage();
+    if (refreshAt) {
+      interval_id = setInterval(emitMessage, refreshAt);
+    }
+
+    socket.on(type + "_response", (data: any) => {
       setData(data);
+
+      if (disconnectOnsuccess) {
+        clearInterval(interval_id);
+      }
     });
 
     return () => {
-      socket.disconnect();
+      clearInterval(interval_id);
     };
   }, dependencies);
 
-  return { data };
+  return { data } as any;
 };
-
 export default useSocket;
