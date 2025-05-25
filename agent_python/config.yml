@@ -1,0 +1,23 @@
+# Flask Application Configuration
+
+hosts:
+  - "127.0.0.1"
+
+port: 5000
+debug: true
+
+logging:
+  level: "INFO"
+  file: "/var/log/vezor.log"
+
+security:
+  csrf_enabled: false
+  app_secret: "12345"
+
+cors:
+  allowed_origins:
+    - "*"
+
+sudo:
+  enabled: true
+  password: "10230"
