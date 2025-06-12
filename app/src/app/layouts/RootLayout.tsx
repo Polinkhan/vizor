@@ -3,6 +3,7 @@ import useToggle from "../hooks/custom/use-toggle";
 import { Box, Divider, Stack } from "@mui/material";
 import { SideBar, MobileSideBar } from "../pages/Default/root/SideBar";
 import { useResponsive } from "../components/hook-form/use-responsive";
+import Navbar from "../components/nav/Navbar";
 
 // ------------------------------------------------------------------
 // Interface for the RootLayoutProps component props.
@@ -65,7 +66,7 @@ const RootLayout = ({ children }: RootLayoutProps) => {
 
           {/*------------ Navbar -----------*/}
 
-          {/* <Navbar onOpen={navOnOpen} sm={sm} /> */}
+          <Navbar onOpen={() => {}} sm={sm} />
 
           <Divider />
 

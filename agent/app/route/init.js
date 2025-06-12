@@ -1,9 +1,9 @@
 module.exports = (io) => {
   io.on("connection", (socket) => {
     /*
-     ** Dashboard Routes
+     ** Task Manager Routes
      */
-    require("./dashboard.route")(socket);
+    require("./taskManager.route")(socket);
 
     /*
      ** Services Routes

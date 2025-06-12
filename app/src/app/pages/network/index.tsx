@@ -6,7 +6,7 @@ import FirewallView from "./(tabs)/firewall/FirewallView";
 const Network = (props: any) => {
   return (
     <BodyLayout {...props}>
-      <CustomTabs tabList={TabList} />
+      <CustomTabs tabList={TabList} orientation="vertical" />
     </BodyLayout>
   );
 };

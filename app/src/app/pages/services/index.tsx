@@ -7,7 +7,7 @@ import CustomTabs from "../../components/tab/CustomTabs";
 const Services = (props: any) => {
   return (
     <BodyLayout {...props}>
-      <CustomTabs tabList={TabList} />
+      <CustomTabs orientation="vertical" tabList={TabList} />
     </BodyLayout>
   );
 };

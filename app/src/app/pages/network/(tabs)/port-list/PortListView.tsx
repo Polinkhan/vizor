@@ -30,7 +30,7 @@ const PortListView = () => {
   // Table props
   // ------------------------------------------
   const filterList: Omit<TablefilterListType, "data">[] = [
-    { label: "Protocol", key: "protocol", defaultFilters: ["tcp", "udp", "tcp6", "udp6"] },
+    { label: "Protocol", key: "protocol", defaultFilters: ["tcp", "tcp6"] },
     { label: "Program", key: "program", defaultFilters: [] },
   ];
 
@@ -47,7 +47,6 @@ const PortListView = () => {
         filterList={filterList}
         iconButtons={iconButtons}
         header={PortLissenTableHeader}
-        config={{ defaultRowsPerPage: 25 }}
         resource={{ columns: PortLissenTableColumns, reRender }}
       />
     </ComponentLoader>

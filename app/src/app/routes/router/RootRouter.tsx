@@ -11,6 +11,7 @@ import Setup from "../../pages/setup";
 import Terminal from "../../pages/terminal";
 import Files from "../../pages/files";
 import Network from "../../pages/network";
+import TaskManager from "../../pages/task_manager";
 
 const RootPage = lazy(() => import("../../pages/Default/root"));
 
@@ -25,6 +26,7 @@ const RootRouter = () => {
       <Route path="/" element={<Landing />} />
       <Route path={"/app"} element={<RootPage />}>
         <Route path="dashboard" element={<Dashboard />} />
+        <Route path="task_manager" element={<TaskManager />} />
         <Route path="services" element={<Services />} />
 
         <Route path="network" element={<Network />} />

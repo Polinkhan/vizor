@@ -9,6 +9,9 @@ const EVENTS = {
   FILE_CONTENT: "file_content",
   DASHBOARD: "dashboard",
   PORT_LIST: "port_list",
+  CPU_DETAILS: "cpu_details",
+  CPU_UTILIZATION: "cpu_utilization",
+  MEMORY_UTILIZATION: "memory_utilization",
   INSTALL_NET_TOOLS: "install_net_tools",
 };
 

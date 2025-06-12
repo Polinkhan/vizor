@@ -51,4 +51,8 @@ export const SVG = {
   folder: (props: svgProps) => getSvgImage(getSvgPath("folder"), props),
   stack: (props: svgProps) => getSvgImage(getSvgPath("stack"), props),
   directory: (props: svgProps) => getSvgImage(getSvgPath("directory"), props),
+  graph: (props: svgProps) => getSvgImage(getSvgPath("graph"), props),
+  cpu: (props: svgProps) => getSvgImage(getSvgPath("cpu"), props),
+  memory: (props: svgProps) => getSvgImage(getSvgPath("memory"), props),
+  disk: (props: svgProps) => getSvgImage(getSvgPath("disk"), props),
 };

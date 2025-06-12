@@ -50,6 +50,12 @@ const MenuList = ({ currentPath, onClose }: { currentPath: string; onClose: any 
           active_url: ["dashboard"],
           icon: "dashboard",
         },
+        {
+          name: "Task Manager",
+          url: "task_manager",
+          active_url: ["task_manager"],
+          icon: "graph",
+        }
       ],
     },
     {
