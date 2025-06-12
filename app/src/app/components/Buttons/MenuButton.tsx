@@ -7,7 +7,6 @@ import { useSnackbar } from "notistack";
 // Purpose: A custom component for menu buttons with icons and text.
 // -----------------------------------------------------------------------------
 const MenuButton = ({ active, title, Icon, url, onClose, disabled }: any) => {
-  const theme = useTheme();
   const { enqueueSnackbar } = useSnackbar();
 
   const handleClick = () => {
@@ -15,31 +14,42 @@ const MenuButton = ({ active, title, Icon, url, onClose, disabled }: any) => {
     disabled && enqueueSnackbar("insufficient Privileges!", { variant: "error" });
   };
 
+  if (active) {
+    return <ButtonComponent active={active} title={title} Icon={Icon} disabled={disabled} />;
+  }
+
   return (
     <Link to={disabled ? "#" : url} className="preventSelect" style={{ textDecoration: "none" }} onClick={handleClick}>
-      <MenuButtonWrapper disabled={disabled} disableGutters active={active} theme={theme}>
-        <Stack px={1}>{Icon && <Icon active={active} />}</Stack>
-
-        <ListItemText
-          primary={title}
-          primaryTypographyProps={{
-            noWrap: true,
-            typography: "body2",
-            textTransform: "capitalize",
-            fontWeight: 500,
-            paddingLeft: active ? 0.5 : 0,
-
-            sx: {
-              transition: "0.3s",
-              "&:focus": {
-                transform: "scale(95%)",
-                bgcolor: "red",
-              },
-            },
-          }}
-        />
-      </MenuButtonWrapper>
+      <ButtonComponent active={active} title={title} Icon={Icon} disabled={disabled} />
     </Link>
+  );
+};
+
+const ButtonComponent = ({ active, title, Icon, disabled }: any) => {
+  const theme = useTheme();
+  return (
+    <MenuButtonWrapper disabled={disabled} disableGutters active={active} theme={theme}>
+      <Stack px={1}>{Icon && <Icon active={active} size={20} />}</Stack>
+
+      <ListItemText
+        primary={title}
+        primaryTypographyProps={{
+          marginTop: 0.2,
+          noWrap: true,
+          typography: "body2",
+          textTransform: "capitalize",
+          fontWeight: 500,
+          // paddingLeft: active ? 0.5 : 0,
+          sx: {
+            transition: "0.3s all ease-in-out",
+            "&:focus": {
+              transform: "scale(95%)",
+              bgcolor: "red",
+            },
+          },
+        }}
+      />
+    </MenuButtonWrapper>
   );
 };
 

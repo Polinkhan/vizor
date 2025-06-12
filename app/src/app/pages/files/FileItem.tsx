@@ -1,7 +1,5 @@
+import { getSvgPath } from "../../common/helpers";
 import { alpha, Box, Grid, GridProps, Stack, Typography, useTheme } from "@mui/material";
-import file_icon from "../../../assets/svg/icons/file.svg";
-import image_icon from "../../../assets/svg/icons/image.svg";
-import folder_icon from "../../../assets/svg/icons/folder.svg";
 
 interface FileItemProps extends GridProps {
   label: string;
@@ -16,9 +14,9 @@ const FileItem = ({ isSelected, componentFor, mimeType, label, sx, ...rest }: Fi
   const primary_bg = alpha(primary, 0.1);
   const primary_hover_bg = alpha(primary, 0.05);
 
-  let dynamic_file_icon = file_icon;
+  let dynamic_file_icon = getSvgPath("file");
   if (mimeType && mimeType.includes("image")) {
-    dynamic_file_icon = image_icon;
+    dynamic_file_icon = getSvgPath("image");
   }
 
   return (
@@ -39,7 +37,7 @@ const FileItem = ({ isSelected, componentFor, mimeType, label, sx, ...rest }: Fi
         }}
         {...rest}
       >
-        {componentFor === "folder" && <Box component={"img"} src={folder_icon} sx={{ height: 60 }} />}
+        {componentFor === "folder" && <Box component={"img"} src={getSvgPath("folder")} sx={{ height: 60 }} />}
         {componentFor === "file" && <Box component={"img"} src={dynamic_file_icon} sx={{ height: 60 }} />}
 
         <Typography variant="body2" sx={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>

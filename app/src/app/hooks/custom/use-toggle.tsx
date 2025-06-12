@@ -1,7 +1,7 @@
 import { useState } from "react";
 
-const useToggle = () => {
-  const [open, setOpen] = useState(false);
+const useToggle = (defaultState: boolean = false) => {
+  const [open, setOpen] = useState(defaultState);
   const [resource, setResource] = useState<any>();
 
   const onOpen = (res?: any) => {

@@ -1,8 +1,6 @@
-import { Box, Divider, Stack, Typography } from "@mui/material";
-import file_icon from "../../../assets/svg/icons/file.svg";
-import image_icon from "../../../assets/svg/icons/image.svg";
-import folder_icon from "../../../assets/svg/icons/folder.svg";
 import { convertBytes } from "../../common/helpers";
+import { getSvgPath } from "../../common/helpers";
+import { Box, Divider, Stack, Typography } from "@mui/material";
 
 interface FileInfoProps {
   data: {
@@ -19,9 +17,9 @@ interface FileInfoProps {
 const FileInfo = ({ data, path }: FileInfoProps) => {
   const { name, size, permissions, type, mimeType } = data;
 
-  let dynamic_file_icon = file_icon;
+  let dynamic_file_icon = getSvgPath("file");
   if (mimeType && mimeType.includes("image")) {
-    dynamic_file_icon = image_icon;
+    dynamic_file_icon = getSvgPath("image");
   }
 
   return (
@@ -30,7 +28,7 @@ const FileInfo = ({ data, path }: FileInfoProps) => {
 
       <Stack width={{ lg: 300, xl: 350 }} gap={2} sx={{ overflow: "auto" }}>
         <Stack p={4}>
-          {type === "dir" && <Box component={"img"} src={folder_icon} sx={{ height: 150 }} />}
+          {type === "dir" && <Box component={"img"} src={getSvgPath("folder")} sx={{ height: 150 }} />}
           {type === "file" && <Box component={"img"} src={dynamic_file_icon} sx={{ height: 150 }} />}
         </Stack>
 

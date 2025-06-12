@@ -1,11 +1,11 @@
-import { TablefilterListType } from "../../common/types/types.table";
-import { CustomTable } from "../../components/table/custom-table";
-import { ServicesTableHeader, ServicesTableColumns } from "./utils";
-import useRerender from "../../hooks/custom/use-rerender";
-import ComponentLoader from "../../components/lodaer/ComponentLoader";
-import useRefresh from "../../hooks/custom/use-refresh";
-import RefreshSelect from "../../components/refresh/RefreshSelect";
-import useSocket from "../../hooks/socket/use-socket";
+import { TablefilterListType } from "../../../../common/types/types.table";
+import { CustomTable } from "../../../../components/table/custom-table";
+import { ServicesTableHeader, ServicesTableColumns } from "../../utils";
+import useRerender from "../../../../hooks/custom/use-rerender";
+import ComponentLoader from "../../../../components/lodaer/ComponentLoader";
+import useRefresh from "../../../../hooks/custom/use-refresh";
+import RefreshSelect from "../../../../components/refresh/RefreshSelect";
+import useSocket from "../../../../hooks/socket/use-socket";
 
 const ServicesView = () => {
   // ------------------------------------------

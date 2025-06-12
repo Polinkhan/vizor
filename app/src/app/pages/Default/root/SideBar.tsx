@@ -1,9 +1,9 @@
 import { Drawer, Stack, Typography } from "@mui/material";
 import { useLocation } from "react-router-dom";
-import { SVG } from "../../../components/images/Image";
+import { SVG } from "../../../components/images/icons";
 import MenuButton from "../../../components/Buttons/MenuButton";
-import app from "../../../../assets/svg/icons/app.svg";
 import SvgIcon from "../../../components/icon/SvgIcon";
+import { getSvgPath } from "../../../common/helpers";
 
 // -----------------------------------------------------------------------------
 // Component: SideBar
@@ -17,7 +17,7 @@ const SideBar = ({ onClose }: { onClose?: () => void }) => {
   return (
     <Stack p={2} gap={2} flex={1}>
       <Stack gap={2} direction={"row"} alignItems={"center"}>
-        <SvgIcon src={app} height={60} sx={{ bgcolor: (theme) => theme.palette.primary.main }} />
+        <SvgIcon src={getSvgPath("app")} height={60} sx={{ bgcolor: (theme) => theme.palette.primary.main }} />
         <Stack>
           <Typography color={"primary.main"} fontWeight={600}>
             Vizor
@@ -42,58 +42,99 @@ const SideBar = ({ onClose }: { onClose?: () => void }) => {
 const MenuList = ({ currentPath, onClose }: { currentPath: string; onClose: any }) => {
   const modules = [
     {
-      name: "Dashboard",
-      url: "dashboard",
-      active_url: ["dashboard"],
-      icon: "dashboard",
+      name: "Overview",
+      sections: [
+        {
+          name: "Dashboard",
+          url: "dashboard",
+          active_url: ["dashboard"],
+          icon: "dashboard",
+        },
+      ],
     },
     {
       name: "Services",
-      url: "services",
-      active_url: ["services"],
-      icon: "dashboard",
+      sections: [
+        {
+          name: "Services",
+          url: "services",
+          active_url: ["services"],
+          icon: "service",
+        },
+        {
+          name: "Network",
+          url: "network",
+          active_url: ["network"],
+          icon: "internet",
+        },
+        {
+          name: "Cron Jobs",
+          url: "cron_jobs",
+          active_url: ["cron_jobs"],
+          icon: "calendar",
+        },
+      ],
     },
     {
       name: "Files",
-      url: "files",
-      active_url: ["files"],
-      icon: "dashboard",
+      sections: [
+        {
+          name: "Files",
+          url: "files",
+          active_url: ["files"],
+          icon: "directory",
+        },
+        {
+          name: "Stream File",
+          url: "stream_file",
+          active_url: ["stream_file"],
+          icon: "stack",
+        },
+      ],
     },
     {
-      name: "Logger",
-      url: "logger",
-      active_url: ["logger"],
-      icon: "dashboard",
-    },
-    {
-      name: "Terminal",
-      url: "terminal",
-      active_url: ["terminal"],
-      icon: "dashboard",
-    },
-    {
-      name: "System Information",
-      url: "system_info",
-      active_url: ["system_info"],
-      icon: "dashboard",
+      name: "System",
+      sections: [
+        {
+          name: "Terminal",
+          url: "terminal",
+          active_url: ["terminal"],
+          icon: "dashboard",
+        },
+        {
+          name: "System Information",
+          url: "system_info",
+          active_url: ["system_info"],
+          icon: "dashboard",
+        },
+      ],
     },
   ];
   const paths = currentPath.split("/");
 
   return (
     <Stack flex={1} gap={3}>
-      <Stack gap={0.5}>
-        {modules.map(({ name, url, active_url, icon }, index) => {
+      <Stack gap={2}>
+        {modules.map(({ name, sections }, index) => {
           return (
-            <MenuButton
-              key={index}
-              active={paths.some((path) => active_url?.includes(path))}
-              title={name}
-              // @ts-ignore
-              Icon={SVG?.[icon]}
-              url={url}
-              onClose={onClose}
-            />
+            <Stack key={index} gap={0.5}>
+              <Typography px={1} fontSize={11} fontWeight={600} color={"grey.500"} sx={{ textTransform: "uppercase" }}>
+                {name}
+              </Typography>
+              {sections?.map(({ name, url, active_url, icon }, index) => {
+                return (
+                  <MenuButton
+                    key={index}
+                    active={paths.some((path) => active_url?.includes(path))}
+                    title={name}
+                    // @ts-ignore
+                    Icon={SVG?.[icon]}
+                    url={url}
+                    onClose={onClose}
+                  />
+                );
+              })}
+            </Stack>
           );
         })}
       </Stack>

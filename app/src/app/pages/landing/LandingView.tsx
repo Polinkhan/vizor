@@ -3,7 +3,7 @@ import banner from "../../../assets/images/banner.svg";
 import bannerBg from "../../../assets/images/banner-bg.svg";
 import { Link } from "react-router-dom";
 import Slide from "../../components/animate/Slide";
-import { SVG } from "../../components/images/Image";
+import { SVG } from "../../components/images/icons";
 
 const LandingView = () => {
   return (

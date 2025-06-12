@@ -1,0 +1,8 @@
+code {
+  border-radius: 6px;
+  padding: 0.25rem 0.6rem 0.15rem;
+  background-color: #dfdfdf;
+  border: 1px solid #cccccc;
+  font-size: 12px !important;
+  font-family: "Courier New", Courier, monospace !important;
+}

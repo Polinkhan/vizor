@@ -3,7 +3,7 @@ import { CustomIconButton } from "../Buttons/IconButtons";
 import usePopover from "../../hooks/custom/use-popover";
 import CustomPopover from "../popover/CustomPopover";
 
-import { SVG } from "../images/Image";
+import { SVG } from "../images/icons";
 
 // ------------------------------------------------------------------
 // Notifications component.

@@ -1,8 +1,7 @@
 import { Dispatch, SetStateAction } from "react";
-import { alpha, Box, IconButton, Stack, Typography, useTheme } from "@mui/material";
+import { alpha, IconButton, Stack, Typography, useTheme } from "@mui/material";
 
-import back_icon from "../../../assets/svg/icons/left.svg";
-import forward_icon from "../../../assets/svg/icons/right.svg";
+import { getSvgPath } from "../../common/helpers";
 import SvgIcon from "../../components/icon/SvgIcon";
 
 interface BreadcrumbProps {
@@ -11,32 +10,45 @@ interface BreadcrumbProps {
 }
 
 export const Breadcrumb = ({ path, setPath }: BreadcrumbProps) => {
+  const path_length = path.length;
   return (
     <Stack direction={"row"} alignItems={"center"} gap={2}>
       <Typography variant="body2" fontWeight={500}>
         Location :{" "}
       </Typography>
 
-      <Stack direction={"row"} gap={1} alignItems={"center"} divider={<Typography variant="caption">-</Typography>}>
+      <Stack direction={"row"} gap={1} alignItems={"center"}>
         {path.map((dir: string, index: number) => {
+          const is_last = index === path_length - 1;
+          if (index === 0) dir = "(root)";
+
           return (
-            <Typography
-              key={index}
-              variant="caption"
-              fontWeight={600}
-              onClick={() => {
-                setPath((prev) => prev.slice(0, index + 1));
-              }}
-              sx={{
-                px: 1.5,
-                py: 0.5,
-                bgcolor: "grey.200",
-                borderRadius: 0.75,
-                cursor: "pointer",
-              }}
-            >
-              {dir}
-            </Typography>
+            <>
+              {index > 0 && (
+                <Typography variant="body2" fontWeight={400} color="grey.600">
+                  /
+                </Typography>
+              )}
+              <Typography
+                key={index}
+                variant="body2"
+                fontWeight={is_last ? 600 : 400}
+                onClick={() => {
+                  setPath((prev) => prev.slice(0, index + 1));
+                }}
+                sx={{
+                  cursor: "pointer",
+                  color: is_last ? "grey.900" : "grey.600",
+                  "&:hover": {
+                    color: "grey.900",
+                    textDecoration: "underline",
+                  },
+                  transition: "all 0.2s ease-in-out",
+                }}
+              >
+                {dir}
+              </Typography>
+            </>
           );
         })}
       </Stack>
@@ -77,10 +89,10 @@ export const BackForward = ({ path, setPath, forwardHistory, setForwardHistory }
   return (
     <Stack direction={"row"} gap={1} alignItems={"center"}>
       <IconButton color="primary" sx={{ bgcolor: primary_bg }} onClick={handleBack} disabled={disableBackBtn}>
-        <SvgIcon src={back_icon} sx={{ width: 24 }} />
+        <SvgIcon src={getSvgPath("left")} sx={{ width: 24 }} />
       </IconButton>
       <IconButton color="primary" sx={{ bgcolor: primary_bg }} onClick={handleForward} disabled={disableForwardBtn}>
-        <SvgIcon src={forward_icon} sx={{ width: 24 }} />
+        <SvgIcon src={getSvgPath("right")} sx={{ width: 24 }} />
       </IconButton>
     </Stack>
   );

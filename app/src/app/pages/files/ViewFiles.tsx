@@ -1,7 +1,7 @@
 import { Container, Divider, Drawer, Grid, MenuItem, Stack, Typography } from "@mui/material";
 import useSocket from "../../hooks/socket/use-socket";
 
-import { MouseEvent, useState } from "react";
+import { MouseEvent, useEffect, useState } from "react";
 import usePopover from "../../hooks/custom/use-popover";
 import CustomPopover from "../../components/popover/CustomPopover";
 import Fade from "../../components/animate/Fade";
@@ -11,11 +11,8 @@ import { BackForward, Breadcrumb } from "./NavItems";
 import DrawerContent from "./DrawerContent";
 import SvgIcon from "../../components/icon/SvgIcon";
 
-import move_icon from "../../../assets/svg/icons/cut.svg";
-import copy_icon from "../../../assets/svg/icons/copy.svg";
-import paste_icon from "../../../assets/svg/icons/paste.svg";
-import rename_icon from "../../../assets/svg/icons/rename.svg";
-import permission_icon from "../../../assets/svg/icons/lock.svg";
+import { getSvgPath } from "../../common/helpers";
+import { getLastFilePath, setLastFilePath } from "../../common/storage-helper";
 
 type dirFileType = {
   name: string;
@@ -31,11 +28,13 @@ type fileDataType = {
   files: dirFileType[];
 };
 
+// const getLastFilePath = localStorage.getItem("last_file_path") ?? "/";
+
 const ViewFiles = () => {
   const { open, onOpen, onClose } = usePopover();
   const [openDrawer, setopenDrawer] = useState(false);
 
-  const [path, setPath] = useState(["/"]);
+  const [path, setPath] = useState(getLastFilePath());
   const [forwardHistory, setForwardHistory] = useState<string[][]>([]);
   const [selected, setSelected] = useState({ id: "", name: "", size: 0, permissions: "", type: "", mimeType: "" });
 
@@ -44,6 +43,10 @@ const ViewFiles = () => {
     dependencies: [path],
     payload: { path: path.join("/") },
   });
+
+  useEffect(() => {
+    setLastFilePath(path);
+  }, [path]);
 
   if (!data) return;
 
@@ -119,7 +122,7 @@ const ViewFiles = () => {
                       }}
                       onDoubleClick={() => {
                         setForwardHistory([]);
-                        setPath((prev) => [...prev, name]);
+                        setPath((prev: string[]) => [...prev, name]);
                       }}
                       onContextMenu={(e) => {
                         handleRightClick(e);
@@ -194,7 +197,7 @@ const ViewFiles = () => {
       >
         <MenuItem onClick={handleContextMenu}>
           <Stack direction={"row"} alignItems={"center"} gap={1}>
-            <SvgIcon src={copy_icon} sx={{ height: 18 }} />
+            <SvgIcon src={getSvgPath("copy")} sx={{ height: 18 }} />
             <Typography variant="body2" mt={0.5}>
               Copy
             </Typography>
@@ -202,7 +205,7 @@ const ViewFiles = () => {
         </MenuItem>
         <MenuItem onClick={handleContextMenu}>
           <Stack direction={"row"} alignItems={"center"} gap={1}>
-            <SvgIcon src={move_icon} sx={{ height: 18 }} />
+            <SvgIcon src={getSvgPath("move")} sx={{ height: 18 }} />
             <Typography variant="body2" mt={0.5}>
               Move
             </Typography>
@@ -210,7 +213,7 @@ const ViewFiles = () => {
         </MenuItem>
         <MenuItem disabled>
           <Stack direction={"row"} alignItems={"center"} gap={1}>
-            <SvgIcon src={paste_icon} sx={{ height: 18 }} />
+            <SvgIcon src={getSvgPath("paste")} sx={{ height: 18 }} />
             <Typography variant="body2" mt={0.5}>
               Paste
             </Typography>
@@ -221,7 +224,7 @@ const ViewFiles = () => {
 
         <MenuItem onClick={handleContextMenu}>
           <Stack direction={"row"} alignItems={"center"} gap={1}>
-            <SvgIcon src={rename_icon} sx={{ height: 18 }} />
+            <SvgIcon src={getSvgPath("rename")} sx={{ height: 18 }} />
             <Typography variant="body2" mt={0.5}>
               Rename
             </Typography>
@@ -229,7 +232,7 @@ const ViewFiles = () => {
         </MenuItem>
         <MenuItem onClick={handleContextMenu}>
           <Stack direction={"row"} alignItems={"center"} gap={1}>
-            <SvgIcon src={permission_icon} sx={{ height: 18 }} />
+            <SvgIcon src={getSvgPath("permission")} sx={{ height: 18 }} />
             <Typography variant="body2" mt={0.5}>
               Change Permission
             </Typography>

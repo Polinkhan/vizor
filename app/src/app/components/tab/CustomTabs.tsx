@@ -2,7 +2,6 @@ import { ReactNode, useEffect } from "react";
 import { Stack, Tab, Tabs } from "@mui/material";
 import { Box } from "@mui/system";
 import { useSearchParams } from "react-router-dom";
-import { SVG } from "../images/Image";
 
 export type tabListType = {
   label: string;
@@ -42,12 +41,11 @@ const CustomTabs = ({ tabList }: CustomTabsProps) => {
 
   return (
     <>
-      <Box sx={{ pt: 1, px: 3, borderBottom: 1, borderColor: "divider" }}>
+      <Box sx={{ px: 2, borderBottom: 1, borderColor: "divider" }}>
         <Tabs value={tabValue} variant="scrollable" onChange={handleChange} textColor="primary">
           {tabList.map(({ label }, i) => {
             const Label = (
               <Stack flexDirection={"row"} alignItems={"center"}>
-                {label === "User" ? <SVG.user size={25} /> : <SVG.user_management size={25} />}
                 {label}
               </Stack>
             );

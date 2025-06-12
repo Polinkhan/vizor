@@ -1,5 +1,5 @@
 import { HeaderTypes, TableColumnType } from "../../common/types/types.table";
-import { ActionField, ActiveState, CpuInfo, MemInfo, Status } from "./components/Components";
+import { ActionField, ActiveState, CpuInfo, MemInfo, Status } from "./(tabs)/services/components/Components";
 
 export const ServicesTableHeader: HeaderTypes[] = [
   { label: "Service name", width: 250 },

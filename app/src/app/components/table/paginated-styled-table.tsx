@@ -1,18 +1,9 @@
-import {
-  Box,
-  IconButton,
-  Stack,
-  SxProps,
-  Table,
-  TableBody,
-  TableContainer,
-  Tooltip,
-} from "@mui/material";
+import { Box, IconButton, Stack, SxProps, Table, TableBody, TableContainer, Tooltip } from "@mui/material";
 import TableHeadCustom from "./table-head-custom";
 import { ReactNode } from "react";
 import TablePaginationCustom from "./table-pagination-custom";
 import TableSelectedAction from "./table-selected-action";
-import { SVG } from "../images/Image";
+import { SVG } from "../images/icons";
 
 // ------------------------------------------------------------------
 // Interface for the StyledTableProps.
@@ -41,14 +32,7 @@ interface StyledTableProps {
 // - header: Header configuration.
 // - sx: Styling properties.
 // ------------------------------------------------------------------
-const PaginatedStylesTable = ({
-  data,
-  children,
-  table,
-  header,
-  sx,
-  paginated,
-}: StyledTableProps) => {
+const PaginatedStylesTable = ({ data, children, table, header, sx, paginated }: StyledTableProps) => {
   return (
     <Box height={1} overflow={"hidden"}>
       <Stack sx={{ height: 1, justifyContent: "space-between" }}>
@@ -92,15 +76,11 @@ const PaginatedStylesTable = ({
                 )
               }
             />
-            <TableBody sx={{ height: 1, overflow: "auto" }}>
-              {children}
-            </TableBody>
+            <TableBody sx={{ height: 1, overflow: "auto" }}>{children}</TableBody>
           </Table>
         </TableContainer>
 
-        {paginated && (
-          <TablePaginationCustom table={table} count={table.rowCount} />
-        )}
+        {paginated && <TablePaginationCustom table={table} count={table.rowCount} />}
       </Stack>
     </Box>
   );

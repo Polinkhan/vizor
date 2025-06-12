@@ -3,6 +3,7 @@ import { ReactNode, useState } from "react";
 
 interface CustomButtonProps extends ButtonProps {
   icon?: ReactNode;
+  loading?: boolean;
   onClick: (event?: any) => Promise<void>;
 }
 
@@ -22,9 +23,9 @@ const CustomButton = (props: CustomButtonProps) => {
 
   return (
     <Button
-      disabled={loading}
+      disabled={loading || props.loading}
       onClick={handleClick}
-      endIcon={loading ? <CircularProgress color="inherit" size={18} /> : icon}
+      endIcon={loading || props.loading ? <CircularProgress color="inherit" size={18} /> : icon}
       {...rest}
     />
   );

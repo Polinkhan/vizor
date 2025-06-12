@@ -10,6 +10,7 @@ import SetupLayout from "../../pages/setup/SetupLayout";
 import Setup from "../../pages/setup";
 import Terminal from "../../pages/terminal";
 import Files from "../../pages/files";
+import Network from "../../pages/network";
 
 const RootPage = lazy(() => import("../../pages/Default/root"));
 
@@ -25,6 +26,9 @@ const RootRouter = () => {
       <Route path={"/app"} element={<RootPage />}>
         <Route path="dashboard" element={<Dashboard />} />
         <Route path="services" element={<Services />} />
+
+        <Route path="network" element={<Network />} />
+
         <Route path="files" element={<Files />} />
         <Route path="logger" element={<Logger />} />
         <Route path="terminal" element={<Terminal />} />

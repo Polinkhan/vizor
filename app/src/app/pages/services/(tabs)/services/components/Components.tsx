@@ -1,14 +1,14 @@
 import { Stack, Typography } from "@mui/material";
-import { capitalizeFirstLetter } from "../../../common/common";
-import { ServicesType } from "../../../common/types/types.services";
-import { TableComponentProps } from "../../../common/types/types.table";
-import ActionButton from "../../../components/Buttons/ActionButton";
-import RunningProgress from "../../../components/Loading/RunningProgress";
-import useToggle from "../../../hooks/custom/use-toggle";
+import { capitalizeFirstLetter } from "../../../../../common/common";
+import { ServicesType } from "../../../../../common/types/types.services";
+import { TableComponentProps } from "../../../../../common/types/types.table";
+import ActionButton from "../../../../../components/Buttons/ActionButton";
+import RunningProgress from "../../../../../components/Loading/RunningProgress";
+import useToggle from "../../../../../hooks/custom/use-toggle";
 import { useSnackbar } from "notistack";
-import { convertBytes, getErrorMessage } from "../../../common/helpers";
-import CustomDialog, { DialogActionsType } from "../../../components/dialog/CustomDialog";
-import { useDataContext } from "../../../context/data-context";
+import { convertBytes, getErrorMessage } from "../../../../../common/helpers";
+import CustomDialog, { DialogActionsType } from "../../../../../components/dialog/CustomDialog";
+import { useDataContext } from "../../../../../context/data-context";
 
 export const Status = ({ data }: TableComponentProps<ServicesType>) => {
   return (

@@ -1,7 +1,7 @@
 import { IconButton, IconButtonProps, Tooltip } from "@mui/material";
 import { IconType } from "../../common/types/types.icon";
 import { Link } from "react-router-dom";
-import { SVG } from "../images/Image";
+import { SVG } from "../images/icons";
 
 export interface ActionButtonProps extends IconButtonProps {
   title?: string;

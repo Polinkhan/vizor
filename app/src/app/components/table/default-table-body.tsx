@@ -69,7 +69,7 @@ const TableRowComponent = ({ val, resource, selected, onSelectRow }: TableRowCom
             }
           };
         return (
-          <TableCell {...valueProp} align={align ?? "left"} key={i} sx={{ p: 1 }}>
+          <TableCell {...valueProp} align={align ?? "left"} key={i} sx={{ px: 2, py: 1.2 }}>
             {Component ? (
               <Component {...resource} data={key ? val[key] : val} />
             ) : (

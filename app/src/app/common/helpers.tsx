@@ -1,6 +1,16 @@
 import { Typography } from "@mui/material";
 import { HostType } from "./types/types.setup";
 
+export const getSvgPath = (src: string) => {
+  const path = `/icons/${src}.svg`;
+  return path;
+};
+
+export const getImagePath = (src: string) => {
+  const path = `/images/${src}.png`;
+  return path;
+};
+
 export const getErrorMessage = (err: any) => {
   const err_message = err?.response?.data?.message ?? err?.message;
   return <Typography variant="body2" dangerouslySetInnerHTML={{ __html: err_message }} />;
