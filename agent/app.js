@@ -25,9 +25,4 @@ require("./app/route/init")(new Server(server));
 app.use(cors());
 app.use(morgan("dev"));
 
-// ------------------------------------------
-// Listening to server
-// ------------------------------------------
-server.listen(process.env.PORT, () => {
-  console.log(`listening on port ${process.env.PORT}`);
-});
+module.exports = server;
