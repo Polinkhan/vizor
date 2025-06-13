@@ -12,6 +12,8 @@ const EVENTS = {
   CPU_DETAILS: "cpu_details",
   CPU_UTILIZATION: "cpu_utilization",
   MEMORY_UTILIZATION: "memory_utilization",
+  NETWORK_USAGE: "network_usage",
+  NETWORK_DETAILS: "network_details",
   INSTALL_NET_TOOLS: "install_net_tools",
 };
 

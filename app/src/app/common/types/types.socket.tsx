@@ -6,4 +6,6 @@ export type StatusType =
   | "dashboard"
   | "cpu_utilization"
   | "cpu_details"
-  | "memory_utilization";
+  | "memory_utilization"
+  | "network_usage"
+  | "network_details";

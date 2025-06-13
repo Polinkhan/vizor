@@ -19,4 +19,16 @@ module.exports = (socket) => {
     const response = await taskManagerController.getMemoryUtilization();
     socket.emit(EVENTS.MEMORY_UTILIZATION + "_response", response);
   });
+
+  socket.on(EVENTS.NETWORK_USAGE, async (data) => {
+    const taskManagerController = new TaskManagerController();
+    const response = await taskManagerController.getNetworkUsage();
+    socket.emit(EVENTS.NETWORK_USAGE + "_response", response);
+  });
+
+  socket.on(EVENTS.NETWORK_DETAILS, async (data) => {
+    const taskManagerController = new TaskManagerController();
+    const response = await taskManagerController.getNetworkDetails();
+    socket.emit(EVENTS.NETWORK_DETAILS + "_response", response);
+  });
 };

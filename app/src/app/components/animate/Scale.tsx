@@ -4,9 +4,9 @@ import { ReactNode } from "react";
 type SlideType = "Up" | "Down" | "Left" | "Right";
 
 const defaultAnimations = {
-  initial: { scale: 1.01 },
+  initial: { scale: 0.98 },
   animate: { scale: 1 },
-  exit: { scale: 1.01 },
+  exit: { scale: 0.98 },
 };
 
 // const buildAnimation = (slide: SlideType = "Right", value: number = 10) => {

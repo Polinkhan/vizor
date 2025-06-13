@@ -21,6 +21,9 @@ export const SOCKET_URL = import.meta.env.VITE_SOCKET_URL;
 // Global Variable
 // ------------------------------------------
 
+// Interval
+export const REALTIME_INTERVAL = 1500;
+
 // Route
 export const DEFAULT_ROUTE = "/dashboard";
 

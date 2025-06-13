@@ -102,27 +102,123 @@ class TaskManagerController extends BaseController {
 
   async getMemoryUtilization() {
     try {
-      const stdout = await run("free -m | grep 'Mem:'");
-      const line = stdout.trim();
-      const match = line.match(/(\d+)\s+(\d+)\s+(\d+)\s+(\d+)\s+(\d+)\s+(\d+)/);
+      // Get both Mem and Swap lines
+      const stdout = await run("free -m | grep -E 'Mem:|Swap:'");
+      const lines = stdout.trim().split("\n");
 
-      if (match) {
-        const total = parseInt(match[1]);
-        const used = parseInt(match[2]);
-        const free = parseInt(match[3]);
-        const shared = parseInt(match[4]);
-        const buffCache = parseInt(match[5]);
-        const available = parseInt(match[6]);
+      // Parse Mem line
+      const memLine = lines.find((line) => line.startsWith("Mem:"));
+      const memMatch = memLine ? memLine.match(/(\d+)\s+(\d+)\s+(\d+)\s+(\d+)\s+(\d+)\s+(\d+)/) : null;
+
+      // Parse Swap line
+      const swapLine = lines.find((line) => line.startsWith("Swap:"));
+      const swapMatch = swapLine ? swapLine.match(/(\d+)\s+(\d+)\s+(\d+)/) : null;
+
+      let memResult = {};
+      if (memMatch) {
+        memResult = {
+          total: parseInt(memMatch[1]),
+          used: parseInt(memMatch[2]),
+          free: parseInt(memMatch[3]),
+          shared: parseInt(memMatch[4]),
+          buffCache: parseInt(memMatch[5]),
+          available: parseInt(memMatch[6]),
+        };
+      }
+
+      let swapResult = {};
+      if (swapMatch) {
+        swapResult = {
+          swapTotal: parseInt(swapMatch[1]),
+          swapUsed: parseInt(swapMatch[2]),
+          swapFree: parseInt(swapMatch[3]),
+        };
+      }
+
+      if (Object.keys(memResult).length > 0) {
         return {
-          total,
-          used,
-          free,
-          shared,
-          buffCache,
-          available,
+          ...memResult,
+          ...swapResult,
         };
       }
       return "Memory usage not found";
+    } catch (error) {
+      return error.message;
+    }
+  }
+
+  // This implementation calculates download (rx) and upload (tx) speed in bytes/sec for each interface.
+  // It stores previous stats in memory for speed calculation.
+  // Note: This will only work correctly if the same instance is used for repeated calls.
+
+  // Store previous stats and timestamps in a static property
+  static _prevNetworkStats = {};
+
+  async getNetworkUsage() {
+    try {
+      // Read /proc/net/dev for network statistics
+      const stdout = await run("cat /proc/net/dev");
+      const lines = stdout.trim().split("\n");
+
+      // /proc/net/dev format:
+      // Inter-|   Receive                                                |  Transmit
+      //  face |bytes    packets errs drop fifo frame compressed multicast|bytes    packets errs drop fifo colls carrier compressed
+      //   eth0:  1234567  ...   ...   ...   ...   ...   ...   ...         7654321  ...   ...   ...   ...   ...   ...   ...
+      const interfaces = [];
+      for (let i = 2; i < lines.length; i++) {
+        // skip headers
+        const line = lines[i].trim();
+        if (!line) continue;
+        // Split by colon to separate interface name from stats
+        const [ifacePart, statsPart] = line.split(":");
+        if (!ifacePart || !statsPart) continue;
+        const iface = ifacePart.trim();
+        const stats = statsPart.trim().split(/\s+/);
+        if (stats.length < 16) continue; // Should have at least 16 columns
+
+        // RX bytes is stats[0], TX bytes is stats[8]
+        const rx = parseInt(stats[0]);
+        const tx = parseInt(stats[8]);
+        interfaces.push({ interface: iface, rx, tx });
+      }
+
+      // Calculate speeds
+      const now = Date.now();
+      const result = [];
+      for (const iface of interfaces) {
+        const prev = TaskManagerController._prevNetworkStats[iface.interface];
+        let downloadSpeed = null;
+        let uploadSpeed = null;
+        if (prev && prev.rx !== null && prev.tx !== null) {
+          const timeDiff = (now - prev.timestamp) / 1000; // seconds
+          if (timeDiff > 0) {
+            downloadSpeed = (iface.rx - prev.rx) / timeDiff;
+            uploadSpeed = (iface.tx - prev.tx) / timeDiff;
+            // Prevent negative speeds (e.g., counter reset)
+            if (downloadSpeed < 0) downloadSpeed = 0;
+            if (uploadSpeed < 0) uploadSpeed = 0;
+          }
+        }
+        // Save current stats for next call
+        TaskManagerController._prevNetworkStats[iface.interface] = {
+          rx: iface.rx,
+          tx: iface.tx,
+          timestamp: now,
+        };
+
+        if (iface.interface === "lo") continue;
+        if (iface.rx === 0 && iface.tx === 0) continue;
+
+        result.push({
+          interface: iface.interface,
+          rx: iface.rx,
+          tx: iface.tx,
+          downloadSpeed: downloadSpeed !== null ? downloadSpeed : 0, // bytes/sec
+          uploadSpeed: uploadSpeed !== null ? uploadSpeed : 0, // bytes/sec
+        });
+      }
+
+      return result;
     } catch (error) {
       return error.message;
     }

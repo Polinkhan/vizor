@@ -1,6 +1,7 @@
-import {  Stack } from "@mui/material";
+import { Stack } from "@mui/material";
 import { ReactNode } from "react";
 import { CircleLoading } from "../animate/LoadingScreen";
+import Fade from "../animate/Fade";
 
 interface ComponentLoaderProps {
   data: any;
@@ -12,8 +13,16 @@ const ComponentLoader = ({ data, children }: ComponentLoaderProps) => {
 
   return (
     <Stack height={1}>
-      {no_data && <CircleLoading />}
-      {!no_data && children}
+      {no_data && (
+        <Fade duration={0.3}>
+          <CircleLoading />
+        </Fade>
+      )}
+      {!no_data && (
+        <Fade duration={0.3}>
+          <>{children}</>
+        </Fade>
+      )}
     </Stack>
   );
 };
