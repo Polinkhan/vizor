@@ -17,4 +17,12 @@ module.exports = (socket) => {
     const response = await fileController.getFileContent(file_path, mimeType);
     socket.emit(EVENTS.FILE_CONTENT + "_response", response);
   });
+
+  // File Actions
+  socket.on(EVENTS.FILE_ACTIONS, async (data) => {
+    const { action, src, dst } = data;
+    const fileController = new FileController();
+    const response = await fileController.fileActions(action, src, dst);
+    socket.emit(EVENTS.FILE_ACTIONS + "_response", response);
+  });
 };

@@ -23,3 +23,14 @@
 # log:
 #   level: info
 #   file: /var/log/vizor.log
+
+# ==========================================
+#            File Actions
+# ==========================================
+# file_actions:
+#   copy: true
+#   move: true
+#   delete: false
+#   rename: true
+#   create: true
+#   create_dir: true

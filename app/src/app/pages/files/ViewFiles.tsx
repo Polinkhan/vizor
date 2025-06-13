@@ -1,18 +1,15 @@
-import { Container, Divider, Drawer, Grid, MenuItem, Stack, Typography } from "@mui/material";
+import { Container, Divider, Drawer, Grid, Stack, Typography } from "@mui/material";
 import useSocket from "../../hooks/socket/use-socket";
-
-import { MouseEvent, useEffect, useState } from "react";
-import usePopover from "../../hooks/custom/use-popover";
-import CustomPopover from "../../components/popover/CustomPopover";
+import { useEffect } from "react";
 import Fade from "../../components/animate/Fade";
 import FileItem from "./FileItem";
 import FileInfo from "./FileInfo";
 import { BackForward, Breadcrumb } from "./NavItems";
 import DrawerContent from "./DrawerContent";
-import SvgIcon from "../../components/icon/SvgIcon";
-
-import { getSvgPath } from "../../common/helpers";
-import { getLastFilePath, setLastFilePath } from "../../common/storage-helper";
+import { setLastFilePath } from "../../common/storage-helper";
+import { useLocalContext } from "../../context/local-context";
+import { defaultValue, FileContextTypes } from ".";
+import Popover from "./Popover";
 
 type dirFileType = {
   name: string;
@@ -31,16 +28,15 @@ type fileDataType = {
 // const getLastFilePath = localStorage.getItem("last_file_path") ?? "/";
 
 const ViewFiles = () => {
-  const { open, onOpen, onClose } = usePopover();
-  const [openDrawer, setopenDrawer] = useState(false);
-
-  const [path, setPath] = useState(getLastFilePath());
-  const [forwardHistory, setForwardHistory] = useState<string[][]>([]);
-  const [selected, setSelected] = useState({ id: "", name: "", size: 0, permissions: "", type: "", mimeType: "" });
+  // -----------------------
+  // Hooks
+  // -----------------------
+  const { value, setValue } = useLocalContext();
+  const { drawer, path, selected, reRender } = value as FileContextTypes;
 
   const { data }: { data: fileDataType } = useSocket({
     type: "files",
-    dependencies: [path],
+    dependencies: [path, reRender],
     payload: { path: path.join("/") },
   });
 
@@ -50,15 +46,31 @@ const ViewFiles = () => {
 
   if (!data) return;
 
-  const handleRightClick = (e: any) => {
-    onOpen(e);
-    e.preventDefault(); // Prevent default browser context menu
-    console.log("Right-clicked!", e.clientX, e.clientY);
+  const handleRightClick = (e: any, type: "dir" | "file" | "root") => {
+    e.preventDefault();
+    e.stopPropagation();
+
+    const anchorEl = type === "root" ? undefined : e.currentTarget;
+    const anchorReference = type === "root" ? "anchorPosition" : "anchorEl";
+    const selected = type === "root" ? defaultValue.selected : value.selected;
+    const position = type === "root" ? { top: e.clientY, left: e.clientX } : undefined;
+
+    setValue((prev: FileContextTypes) => ({
+      ...prev,
+      selected,
+      contextMenu: { open: true, anchorReference, anchorEl, position },
+    }));
   };
 
-  const handleContextMenu = (e: MouseEvent<HTMLLIElement, globalThis.MouseEvent>) => {
-    console.log(e);
-    onClose();
+  const getSelected = (props: dirFileType, type: "dir" | "file") => {
+    return {
+      type,
+      name: props.name,
+      size: props.size,
+      permissions: props.permissions,
+      id: path + props.name,
+      mimeType: props.mimeType ?? "",
+    };
   };
 
   return (
@@ -67,23 +79,18 @@ const ViewFiles = () => {
       overflow={"auto"}
       onContextMenu={(e) => e.preventDefault()}
       onClick={() => {
-        setSelected({ id: "", name: "", size: 0, permissions: "", type: "", mimeType: "" });
+        setValue((prev: FileContextTypes) => ({ ...prev, selected: defaultValue.selected }));
         console.log("Clicked anywhere");
       }}
     >
       <Stack px={2} py={1.5} gap={4} direction={"row"} alignItems={"center"}>
-        <BackForward
-          path={path}
-          setPath={setPath}
-          forwardHistory={forwardHistory}
-          setForwardHistory={setForwardHistory}
-        />
-        <Breadcrumb path={path} setPath={setPath} />
+        <BackForward />
+        <Breadcrumb />
       </Stack>
       <Divider />
 
       <Stack flex={1} direction={"row"} overflow={"auto"}>
-        <Stack p={2} flex={1} overflow={"auto"}>
+        <Stack p={2} flex={1} overflow={"auto"} onContextMenu={(e) => handleRightClick(e, "root")}>
           <Fade key={path.join("/")} duration={0.25}>
             <Container maxWidth={"xl"}>
               {!data.success && (
@@ -101,76 +108,51 @@ const ViewFiles = () => {
               )}
 
               <Grid container rowSpacing={1}>
-                {data.dirs.map(({ name, permissions, size }, index: number) => {
-                  const isSelected = selected.id === path + name;
+                {data.dirs.map((props, index: number) => {
+                  const isSelected = selected.id === path + props.name;
                   return (
                     <FileItem
                       key={index}
-                      label={name}
+                      label={props.name}
                       componentFor="folder"
                       isSelected={isSelected}
                       onClick={(e) => {
                         e.stopPropagation();
-                        setSelected({
-                          name,
-                          size,
-                          permissions,
-                          id: path + name,
-                          type: "dir",
-                          mimeType: "",
-                        });
-                      }}
-                      onDoubleClick={() => {
-                        setForwardHistory([]);
-                        setPath((prev: string[]) => [...prev, name]);
+                        setValue((prev: FileContextTypes) => ({ ...prev, selected: getSelected(props, "dir") }));
                       }}
                       onContextMenu={(e) => {
-                        handleRightClick(e);
-                        setSelected({
-                          name,
-                          size,
-                          permissions,
-                          id: path + name,
-                          type: "dir",
-                          mimeType: "",
-                        });
+                        handleRightClick(e, "dir");
+                        setValue((prev: FileContextTypes) => ({ ...prev, selected: getSelected(props, "dir") }));
+                      }}
+                      onDoubleClick={() => {
+                        setValue((prev: FileContextTypes) => ({
+                          ...prev,
+                          forwardHistory: [...prev.forwardHistory, prev.path],
+                          path: [...prev.path, props.name],
+                        }));
                       }}
                     />
                   );
                 })}
-                {data.files.map(({ name, size, permissions, mimeType }, index: number) => {
-                  const isSelected = selected.id === path + name;
+                {data.files.map((props, index: number) => {
+                  const isSelected = selected.id === path + props.name;
 
                   return (
                     <FileItem
                       key={index}
-                      label={name}
-                      mimeType={mimeType}
+                      label={props.name}
+                      mimeType={props.mimeType}
                       componentFor="file"
                       isSelected={isSelected}
                       onClick={(e) => {
                         e.stopPropagation();
-                        setSelected({
-                          name,
-                          size,
-                          permissions,
-                          id: path + name,
-                          type: "file",
-                          mimeType: mimeType ?? "",
-                        });
+                        setValue((prev: FileContextTypes) => ({ ...prev, selected: getSelected(props, "file") }));
                       }}
-                      onDoubleClick={() => setopenDrawer(true)}
                       onContextMenu={(e) => {
-                        handleRightClick(e);
-                        setSelected({
-                          name,
-                          size,
-                          permissions,
-                          id: path + name,
-                          type: "dir",
-                          mimeType: "",
-                        });
+                        handleRightClick(e, "file");
+                        setValue((prev: FileContextTypes) => ({ ...prev, selected: getSelected(props, "file") }));
                       }}
+                      onDoubleClick={() => setValue((prev: FileContextTypes) => ({ ...prev, drawer: { open: true } }))}
                     />
                   );
                 })}
@@ -182,65 +164,13 @@ const ViewFiles = () => {
         <FileInfo data={selected} path={path} />
       </Stack>
 
-      <CustomPopover
-        arrow={"top-left"}
-        open={open}
-        onClose={onClose}
-        anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
-        sx={{
-          width: 200,
-          p: 1,
-          bgcolor: "background.paper",
-          boxShadow: 3,
-        }}
-        onClick={(e) => e.stopPropagation()}
+      <Popover />
+
+      <Drawer
+        anchor="right"
+        open={drawer.open}
+        onClose={() => setValue((prev: FileContextTypes) => ({ ...prev, drawer: { open: false } }))}
       >
-        <MenuItem onClick={handleContextMenu}>
-          <Stack direction={"row"} alignItems={"center"} gap={1}>
-            <SvgIcon src={getSvgPath("copy")} sx={{ height: 18 }} />
-            <Typography variant="body2" mt={0.5}>
-              Copy
-            </Typography>
-          </Stack>
-        </MenuItem>
-        <MenuItem onClick={handleContextMenu}>
-          <Stack direction={"row"} alignItems={"center"} gap={1}>
-            <SvgIcon src={getSvgPath("move")} sx={{ height: 18 }} />
-            <Typography variant="body2" mt={0.5}>
-              Move
-            </Typography>
-          </Stack>
-        </MenuItem>
-        <MenuItem disabled>
-          <Stack direction={"row"} alignItems={"center"} gap={1}>
-            <SvgIcon src={getSvgPath("paste")} sx={{ height: 18 }} />
-            <Typography variant="body2" mt={0.5}>
-              Paste
-            </Typography>
-          </Stack>
-        </MenuItem>
-
-        <Divider />
-
-        <MenuItem onClick={handleContextMenu}>
-          <Stack direction={"row"} alignItems={"center"} gap={1}>
-            <SvgIcon src={getSvgPath("rename")} sx={{ height: 18 }} />
-            <Typography variant="body2" mt={0.5}>
-              Rename
-            </Typography>
-          </Stack>
-        </MenuItem>
-        <MenuItem onClick={handleContextMenu}>
-          <Stack direction={"row"} alignItems={"center"} gap={1}>
-            <SvgIcon src={getSvgPath("permission")} sx={{ height: 18 }} />
-            <Typography variant="body2" mt={0.5}>
-              Change Permission
-            </Typography>
-          </Stack>
-        </MenuItem>
-      </CustomPopover>
-
-      <Drawer open={openDrawer} anchor="right" onClose={() => setopenDrawer(false)}>
         <Stack height={1} width={"50vw"} onClick={(e) => e.stopPropagation()}>
           <DrawerContent data={selected} path={path} />
         </Stack>

@@ -2,6 +2,8 @@ const path = require("path");
 const fs = require("fs").promises;
 const mime = require("mime-types");
 const BaseController = require("./base.controller");
+const { run } = require("../utils/execute");
+const { getConfig } = require("../config/config");
 
 class FileController extends BaseController {
   async getFileTypeByExtension(filePath) {
@@ -70,6 +72,64 @@ class FileController extends BaseController {
       await this.writeFile(filePath, content);
       return { success: true };
     } catch (error) {
+      return { success: false, error: error.message };
+    }
+  }
+
+  async fileActions(action, src, dst) {
+    const { file_actions } = await getConfig();
+
+    try {
+      let command = "";
+
+      /*
+       ** Copy File or Directory
+       */
+      if (action === "copy") {
+        if (!file_actions.copy) {
+          throw new Error("Action not allowed");
+        }
+        command = `cp -r ${src} ${dst}`;
+      }
+
+      /*
+       ** Move File or Directory
+       */
+      if (action === "move") {
+        if (!file_actions.move) {
+          throw new Error("Action not allowed");
+        }
+        command = `mv -r ${src} ${dst}`;
+      }
+
+      /*
+       ** Delete File or Directory
+       */
+      if (action === "delete") {
+        if (!file_actions.delete) {
+          throw new Error("Action not allowed");
+        }
+        command = `rm -rf ${src}`;
+      }
+
+      console.log(command);
+      await run(command);
+
+      // if (action === "copy") {
+      //   await run(`cp ${src} ${dst}`);
+      // } else if (action === "move") {
+      //   await run(`mv ${src} ${dst}`);
+      // } else if (action === "delete") {
+      //   await run(`rm -rf ${src}`);
+      // } else if (action === "rename") {
+      //   await run(`mv ${src} ${dst}`);
+      // } else if (action === "create") {
+      //   await run(`touch ${dst}`);
+      // } else if (action === "create_dir") {
+      //   await run(`mkdir -p ${dst}`);
+      // }
+    } catch (error) {
+      console.log(error.message);
       return { success: false, error: error.message };
     }
   }

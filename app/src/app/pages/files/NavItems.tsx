@@ -1,16 +1,16 @@
-import { Dispatch, SetStateAction } from "react";
 import { alpha, IconButton, Stack, Typography, useTheme } from "@mui/material";
 
 import { getSvgPath } from "../../common/helpers";
 import SvgIcon from "../../components/icon/SvgIcon";
+import { useLocalContext } from "../../context/local-context";
+import { FileContextTypes } from ".";
 
-interface BreadcrumbProps {
-  path: string[];
-  setPath: Dispatch<SetStateAction<string[]>>;
-}
+export const Breadcrumb = () => {
+  const { value, setValue } = useLocalContext();
+  const { path } = value as FileContextTypes;
 
-export const Breadcrumb = ({ path, setPath }: BreadcrumbProps) => {
   const path_length = path.length;
+
   return (
     <Stack direction={"row"} alignItems={"center"} gap={2}>
       <Typography variant="body2" fontWeight={500}>
@@ -34,7 +34,10 @@ export const Breadcrumb = ({ path, setPath }: BreadcrumbProps) => {
                 variant="body2"
                 fontWeight={is_last ? 600 : 400}
                 onClick={() => {
-                  setPath((prev) => prev.slice(0, index + 1));
+                  setValue((prev: FileContextTypes) => ({
+                    ...prev,
+                    path: prev.path.slice(0, index + 1),
+                  }));
                 }}
                 sx={{
                   cursor: "pointer",
@@ -56,30 +59,32 @@ export const Breadcrumb = ({ path, setPath }: BreadcrumbProps) => {
   );
 };
 
-interface BackForwardProps {
-  path: string[];
-  setPath: Dispatch<SetStateAction<string[]>>;
-  forwardHistory: string[][];
-  setForwardHistory: Dispatch<SetStateAction<string[][]>>;
-}
-
-export const BackForward = ({ path, setPath, forwardHistory, setForwardHistory }: BackForwardProps) => {
+export const BackForward = () => {
   const theme = useTheme();
   const primary = theme.palette.primary.main;
   const primary_bg = alpha(primary, 0.1);
 
+  const { value, setValue } = useLocalContext();
+  const { path, forwardHistory } = value as FileContextTypes;
+
   const handleBack = () => {
     if (path.length > 1) {
-      setForwardHistory((prev) => [...prev, path]);
-      setPath((prev) => prev.slice(0, -1));
+      setValue((prev: FileContextTypes) => ({
+        ...prev,
+        forwardHistory: [...prev.forwardHistory, path],
+        path: prev.path.slice(0, -1),
+      }));
     }
   };
 
   const handleForward = () => {
     if (forwardHistory.length > 0) {
       const nextPath = forwardHistory[forwardHistory.length - 1];
-      setPath(nextPath);
-      setForwardHistory((prev) => prev.slice(0, -1));
+      setValue((prev: FileContextTypes) => ({
+        ...prev,
+        forwardHistory: prev.forwardHistory.slice(0, -1),
+        path: nextPath,
+      }));
     }
   };
 
