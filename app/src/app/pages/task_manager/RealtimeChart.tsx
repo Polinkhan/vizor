@@ -1,4 +1,4 @@
-import { alpha, Box, Card, CardHeader, CardProps, Divider, Paper, Stack, Typography } from "@mui/material";
+import { Box, Card, CardHeader, CardProps, Stack, Typography } from "@mui/material";
 import useChart from "../../components/chart/use-chart";
 import Chart from "../../components/chart/chart";
 import { useEffect, useRef } from "react";

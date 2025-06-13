@@ -6,8 +6,6 @@ import ComponentLoader from "../../../../components/lodaer/ComponentLoader";
 import useRefresh from "../../../../hooks/custom/use-refresh";
 import RefreshSelect from "../../../../components/refresh/RefreshSelect";
 import useSocket from "../../../../hooks/socket/use-socket";
-import Scale from "../../../../components/animate/Scale";
-import Fade from "../../../../components/animate/Fade";
 
 const ServicesView = () => {
   // ------------------------------------------

@@ -34,17 +34,23 @@ const LandingView = () => {
                   {
                     //@ts-ignore
                     <Button
-                      to="/setup/step1"
+                      to="/app/dashboard"
                       size="large"
                       color="primary"
                       variant="contained"
                       LinkComponent={Link}
                       endIcon={<SVG.app size={32} />}
                     >
-                      Setup new host
+                      Open in App
                     </Button>
                   }
-                  <Button LinkComponent={"a"} size="large" color="primary" startIcon={<SVG.download size={24} />}>
+                  <Button
+                    size="large"
+                    color="primary"
+                    LinkComponent={"a"}
+                    startIcon={<SVG.download size={24} />}
+                    href="https://dl.polinkhan.com/binaries/linux/vizor-agent"
+                  >
                     Download Agent
                   </Button>
                 </Stack>
@@ -58,7 +64,7 @@ const LandingView = () => {
           </Stack>
 
           <Stack component={"footer"} direction={"row"} gap={1} justifyContent={"center"}>
-            <Typography variant="body2">@2024, All right reserved</Typography>
+            <Typography variant="body2">@{new Date().getFullYear()}, All right reserved</Typography>
             <Divider orientation="vertical" />
             <Typography
               component={"a"}

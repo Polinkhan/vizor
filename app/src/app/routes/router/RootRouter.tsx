@@ -6,8 +6,6 @@ import Dashboard from "../../pages/dashboard";
 import Services from "../../pages/services";
 import Logger from "../../pages/logger";
 import Landing from "../../pages/landing";
-import SetupLayout from "../../pages/setup/SetupLayout";
-import Setup from "../../pages/setup";
 import Terminal from "../../pages/terminal";
 import Files from "../../pages/files";
 import Network from "../../pages/network";
@@ -36,9 +34,6 @@ const RootRouter = () => {
         <Route path="terminal" element={<Terminal />} />
       </Route>
 
-      <Route key={location.pathname} path="/setup" element={<SetupLayout />}>
-        <Route key={location.pathname} path=":id" element={<Setup />} />
-      </Route>
       <Route path="*" element={<NotFound />} />
       {/*--------------------------------*/}
       {/*         Unknown Routes         */}

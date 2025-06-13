@@ -11,14 +11,6 @@ import { Outlet } from "react-router-dom";
 import RootLayout from "../../../layouts/RootLayout";
 
 const RootPage = () => {
-  // useEffect(() => {
-  //   const host_list = getHostList();
-
-  //   if (host_list.length === 0) {
-  //     navigate("/setup", { replace: true });
-  //   }
-  // }, []);
-
   return (
     <RootLayout>
       <Outlet />
