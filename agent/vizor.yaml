@@ -30,7 +30,7 @@
 # file_actions:
 #   copy: true
 #   move: true
-#   delete: false
+#   delete: true
 #   rename: true
 #   create: true
 #   create_dir: true

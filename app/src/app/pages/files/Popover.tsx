@@ -24,6 +24,7 @@ const Popover = () => {
         enqueueSnackbar(data.error, { variant: "error" });
       }
 
+      console.log(data);
       setValue((prev: FileContextTypes) => ({
         ...prev,
         reRender: new String(""),

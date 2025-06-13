@@ -81,6 +81,7 @@ class FileController extends BaseController {
 
     try {
       let command = "";
+      let message = "";
 
       /*
        ** Copy File or Directory
@@ -90,6 +91,7 @@ class FileController extends BaseController {
           throw new Error("Action not allowed");
         }
         command = `cp -r ${src} ${dst}`;
+        message = "File copied";
       }
 
       /*
@@ -100,6 +102,7 @@ class FileController extends BaseController {
           throw new Error("Action not allowed");
         }
         command = `mv -r ${src} ${dst}`;
+        message = "File moved";
       }
 
       /*
@@ -110,24 +113,13 @@ class FileController extends BaseController {
           throw new Error("Action not allowed");
         }
         command = `rm -rf ${src}`;
+        message = "File deleted";
       }
 
       console.log(command);
       await run(command);
 
-      // if (action === "copy") {
-      //   await run(`cp ${src} ${dst}`);
-      // } else if (action === "move") {
-      //   await run(`mv ${src} ${dst}`);
-      // } else if (action === "delete") {
-      //   await run(`rm -rf ${src}`);
-      // } else if (action === "rename") {
-      //   await run(`mv ${src} ${dst}`);
-      // } else if (action === "create") {
-      //   await run(`touch ${dst}`);
-      // } else if (action === "create_dir") {
-      //   await run(`mkdir -p ${dst}`);
-      // }
+      return { success: true, message };
     } catch (error) {
       console.log(error.message);
       return { success: false, error: error.message };
