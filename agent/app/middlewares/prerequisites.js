@@ -1,7 +1,8 @@
 const fs = require("fs");
 const yaml = require("js-yaml");
 const { run } = require("../utils/execute");
-const { CONFIG_PATH } = require("../config/default");
+const { CONFIG_PATH, DEFAULT_CONFIG } = require("../config/default");
+const path = require("path");
 
 const getCurrentUser = async () => {
   try {
@@ -26,7 +27,13 @@ const checkRootAccess = async () => {
 
 const checkYamlConfig = async () => {
   if (!fs.existsSync(CONFIG_PATH)) {
-    throw new Error(`${CONFIG_PATH} not found`);
+    try {
+      fs.mkdirSync(path.dirname(CONFIG_PATH), { recursive: true });
+      fs.writeFileSync(CONFIG_PATH, yaml.dump(DEFAULT_CONFIG));
+    } catch (err) {
+      console.log(err);
+      throw new Error(`${CONFIG_PATH} not found`);
+    }
   }
 };
 

@@ -1,5 +1,5 @@
-const CONFIG_PATH = "vizor.yaml";
-// const CONFIG_PATH = "/etc/vizor/vizor.yaml";
+// const CONFIG_PATH = "vizor.yaml";
+const CONFIG_PATH = "/etc/vizor/vizor.yaml";
 
 const DEFAULT_CONFIG = {
   server: {

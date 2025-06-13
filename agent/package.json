@@ -6,11 +6,7 @@
   "author": "Abu Sayed Polin",
   "license": "MIT",
   "bin": "server.js",
-  "pkg": {
-    "assets": [
-      "vizor.yaml"
-    ]
-  },
+  "pkg": {},
   "scripts": {
     "start": "node server.js",
     "dev": "nodemon server.js",
